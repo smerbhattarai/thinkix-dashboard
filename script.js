@@ -890,6 +890,61 @@ window.addEventListener("load", () => {
 });
 
 /* =========================================================
+   LIVE STATUS FEED (Phase 8 — real live pipeline)
+
+   Every ~30 seconds the Monitoring node in the actual GNS3
+   lab pushes a small JSON snapshot (real Suricata alert
+   count over the last 5 minutes + the anomaly detector's
+   current status) to a dedicated `live-data` branch of this
+   repo via the GitHub API. This function polls that file
+   directly — genuinely live data from the running lab, not
+   simulated. If the lab is offline (e.g. between demos) the
+   fetch simply fails silently and the static, evidence-based
+   values already on the page stay as they are.
+========================================================= */
+
+const LIVE_STATUS_URL =
+  "https://raw.githubusercontent.com/smerbhattarai/thinkix-dashboard/live-data/status.json";
+
+function updateLiveStatus(data) {
+  if (alertCountElement && typeof data.recent_alerts_5min === "number") {
+    const previous = securityAlerts;
+    securityAlerts = data.recent_alerts_5min;
+    animateCounter(alertCountElement, previous, securityAlerts, 500);
+    flashElement(alertCountElement);
+  }
+
+  const heroBadge = document.querySelector(".live-badge");
+  if (heroBadge && data.last_updated) {
+    const anomalyNote =
+      data.anomaly_status === "ANOMALY" ? " — ANOMALY DETECTED" : "";
+    heroBadge.textContent = `● LIVE — Monitoring node, ${data.last_updated}${anomalyNote}`;
+  }
+}
+
+function fetchLiveStatus() {
+  fetch(`${LIVE_STATUS_URL}?t=${Date.now()}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Live status fetch failed: " + response.status);
+      }
+      return response.json();
+    })
+    .then((data) => updateLiveStatus(data))
+    .catch((error) => {
+      console.warn(
+        "Live status feed unavailable — showing last verified evidence values instead:",
+        error,
+      );
+    });
+}
+
+window.addEventListener("load", () => {
+  fetchLiveStatus();
+  setInterval(fetchLiveStatus, 30000);
+});
+
+/* =========================================================
    DEVELOPMENT INFORMATION
 ========================================================= */
 
