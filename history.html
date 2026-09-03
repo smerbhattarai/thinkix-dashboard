@@ -1,0 +1,1431 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ThinkiX | Registration History</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+
+        background:
+          radial-gradient(
+            circle at 10% 10%,
+            rgba(14, 165, 233, 0.11),
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 90% 20%,
+            rgba(37, 99, 235, 0.08),
+            transparent 28%
+          ),
+          #07111f;
+
+        color: #e8f0f8;
+      }
+
+      /* =============================
+       HEADER
+    ============================== */
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 18px 5%;
+
+        background: rgba(7, 17, 31, 0.94);
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+        backdrop-filter: blur(14px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .logo {
+        width: 48px;
+        height: 48px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 12px;
+
+        background: linear-gradient(135deg, #38bdf8, #2563eb);
+
+        font-weight: 800;
+      }
+
+      .brand h2 {
+        font-size: 18px;
+      }
+
+      .brand p {
+        margin-top: 4px;
+        color: #8198ad;
+        font-size: 12px;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-button {
+        padding: 10px 15px;
+
+        border-radius: 9px;
+
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        background: rgba(255, 255, 255, 0.03);
+
+        color: #d5e1ec;
+
+        text-decoration: none;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        transition: 0.25s;
+      }
+
+      .header-button:hover {
+        border-color: #38bdf8;
+        transform: translateY(-2px);
+      }
+
+      /* =============================
+       CONTAINER
+    ============================== */
+
+      .container {
+        max-width: 1400px;
+        margin: auto;
+        padding: 50px 4% 90px;
+      }
+
+      .page-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        gap: 20px;
+
+        margin-bottom: 30px;
+      }
+
+      .eyebrow {
+        color: #38bdf8;
+
+        font-size: 11px;
+        font-weight: 700;
+
+        letter-spacing: 2px;
+      }
+
+      .page-heading h1 {
+        margin-top: 8px;
+
+        font-size: clamp(32px, 4vw, 46px);
+      }
+
+      .page-heading p:last-child {
+        margin-top: 9px;
+
+        max-width: 650px;
+
+        color: #8399ad;
+
+        line-height: 1.6;
+
+        font-size: 13px;
+      }
+
+      .history-badge {
+        padding: 9px 14px;
+
+        border-radius: 999px;
+
+        border: 1px solid rgba(56, 189, 248, 0.18);
+
+        background: rgba(56, 189, 248, 0.05);
+
+        color: #8ce7ff;
+
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      /* =============================
+       STATS
+    ============================== */
+
+      .stats {
+        display: grid;
+
+        grid-template-columns: repeat(4, 1fr);
+
+        gap: 16px;
+
+        margin-bottom: 22px;
+      }
+
+      .stat-card {
+        padding: 22px;
+
+        border-radius: 16px;
+
+        border: 1px solid rgba(148, 163, 184, 0.11);
+
+        background: linear-gradient(
+          145deg,
+          rgba(15, 35, 58, 0.97),
+          rgba(8, 22, 39, 0.97)
+        );
+
+        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.23);
+
+        transition: 0.25s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-4px);
+
+        border-color: rgba(56, 189, 248, 0.2);
+      }
+
+      .stat-card span {
+        display: block;
+
+        color: #72899e;
+
+        font-size: 11px;
+      }
+
+      .stat-card strong {
+        display: block;
+
+        margin-top: 8px;
+
+        color: white;
+
+        font-size: 28px;
+      }
+
+      .green {
+        color: #4ade80 !important;
+      }
+
+      .yellow {
+        color: #fde047 !important;
+      }
+
+      .blue {
+        color: #38bdf8 !important;
+      }
+
+      /* =============================
+       TOOLBAR
+    ============================== */
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 15px;
+
+        margin-bottom: 18px;
+      }
+
+      .search-box {
+        flex: 1;
+
+        max-width: 500px;
+
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+
+        padding: 13px 15px;
+
+        border: 1px solid rgba(148, 163, 184, 0.13);
+
+        border-radius: 11px;
+
+        outline: none;
+
+        background: rgba(255, 255, 255, 0.03);
+
+        color: white;
+      }
+
+      .search-box input:focus {
+        border-color: #38bdf8;
+
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.07);
+      }
+
+      .toolbar-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .clear-button {
+        padding: 12px 16px;
+
+        border-radius: 10px;
+
+        border: 1px solid rgba(239, 68, 68, 0.22);
+
+        background: rgba(239, 68, 68, 0.07);
+
+        color: #fca5a5;
+
+        font-size: 11px;
+        font-weight: 700;
+
+        transition: 0.25s;
+      }
+
+      .clear-button:hover {
+        background: rgba(239, 68, 68, 0.12);
+      }
+
+      /* =============================
+       HISTORY PANEL
+    ============================== */
+
+      .history-panel {
+        border: 1px solid rgba(148, 163, 184, 0.11);
+
+        border-radius: 18px;
+
+        background: linear-gradient(
+          145deg,
+          rgba(15, 35, 58, 0.98),
+          rgba(8, 22, 39, 0.98)
+        );
+
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+
+        overflow: hidden;
+      }
+
+      .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        min-width: 1050px;
+      }
+
+      thead {
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      th {
+        padding: 15px;
+
+        text-align: left;
+
+        color: #6f879c;
+
+        font-size: 10px;
+
+        letter-spacing: 1px;
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      td {
+        padding: 16px 15px;
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+
+        color: #c9d6e2;
+
+        font-size: 12px;
+      }
+
+      tbody tr {
+        transition: 0.25s;
+      }
+
+      tbody tr:hover {
+        background: rgba(56, 189, 248, 0.035);
+      }
+
+      .device-name {
+        color: white;
+
+        font-weight: 700;
+      }
+
+      .small-muted {
+        display: block;
+
+        margin-top: 4px;
+
+        color: #61798e;
+
+        font-size: 10px;
+      }
+
+      /* =============================
+       STATUS PILLS
+    ============================== */
+
+      .status {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 6px 9px;
+
+        border-radius: 999px;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.6px;
+      }
+
+      .registered {
+        color: #4ade80;
+
+        border: 1px solid rgba(34, 197, 94, 0.18);
+
+        background: rgba(34, 197, 94, 0.07);
+      }
+
+      .processing {
+        color: #38bdf8;
+
+        border: 1px solid rgba(56, 189, 248, 0.18);
+
+        background: rgba(56, 189, 248, 0.06);
+      }
+
+      .gns3-pending {
+        color: #fde047;
+
+        border: 1px solid rgba(250, 204, 21, 0.18);
+
+        background: rgba(250, 204, 21, 0.06);
+      }
+
+      .gns3-connected {
+        color: #4ade80;
+
+        border: 1px solid rgba(34, 197, 94, 0.18);
+
+        background: rgba(34, 197, 94, 0.07);
+      }
+
+      /* =============================
+       VIEW BUTTON
+    ============================== */
+
+      .view-button {
+        padding: 8px 11px;
+
+        border-radius: 8px;
+
+        border: 1px solid rgba(56, 189, 248, 0.14);
+
+        background: rgba(56, 189, 248, 0.05);
+
+        color: #85dcfb;
+
+        font-size: 10px;
+
+        transition: 0.2s;
+      }
+
+      .view-button:hover {
+        background: rgba(56, 189, 248, 0.1);
+
+        transform: translateY(-1px);
+      }
+
+      /* =============================
+       EMPTY STATE
+    ============================== */
+
+      .empty-state {
+        display: none;
+
+        padding: 70px 20px;
+
+        text-align: center;
+      }
+
+      .empty-state.show {
+        display: block;
+      }
+
+      .empty-icon {
+        width: 65px;
+        height: 65px;
+
+        margin: auto;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 50%;
+
+        background: rgba(56, 189, 248, 0.07);
+
+        color: #38bdf8;
+
+        font-size: 25px;
+      }
+
+      .empty-state h2 {
+        margin-top: 18px;
+      }
+
+      .empty-state p {
+        margin-top: 8px;
+
+        color: #71899f;
+
+        font-size: 12px;
+      }
+
+      /* =============================
+       MODAL
+    ============================== */
+
+      .modal-overlay {
+        position: fixed;
+
+        inset: 0;
+
+        display: none;
+
+        justify-content: center;
+        align-items: center;
+
+        padding: 20px;
+
+        background: rgba(2, 8, 17, 0.78);
+
+        backdrop-filter: blur(8px);
+
+        z-index: 100;
+      }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
+      .modal {
+        width: 100%;
+
+        max-width: 750px;
+
+        max-height: 88vh;
+
+        overflow-y: auto;
+
+        padding: 28px;
+
+        border-radius: 18px;
+
+        border: 1px solid rgba(56, 189, 248, 0.16);
+
+        background: #0b1c30;
+
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+
+        animation: modalIn 0.3s ease;
+      }
+
+      .modal-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: flex-start;
+
+        gap: 20px;
+
+        margin-bottom: 22px;
+      }
+
+      .modal-header h2 {
+        color: white;
+      }
+
+      .modal-header p {
+        margin-top: 6px;
+
+        color: #72899e;
+
+        font-size: 11px;
+      }
+
+      .close-button {
+        width: 36px;
+        height: 36px;
+
+        border: none;
+
+        border-radius: 9px;
+
+        background: rgba(255, 255, 255, 0.05);
+
+        color: #b9c8d6;
+
+        font-size: 18px;
+      }
+
+      .modal-grid {
+        display: grid;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 12px;
+      }
+
+      .modal-info {
+        padding: 14px;
+
+        border-radius: 11px;
+
+        border: 1px solid rgba(255, 255, 255, 0.05);
+
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .modal-info small {
+        display: block;
+
+        color: #677f94;
+
+        font-size: 9px;
+
+        letter-spacing: 1px;
+      }
+
+      .modal-info strong {
+        display: block;
+
+        margin-top: 7px;
+
+        color: white;
+
+        font-size: 12px;
+
+        word-break: break-word;
+      }
+
+      .modal-security {
+        margin-top: 18px;
+
+        padding: 18px;
+
+        border-radius: 12px;
+
+        background: rgba(56, 189, 248, 0.04);
+
+        border: 1px solid rgba(56, 189, 248, 0.11);
+      }
+
+      .modal-security h3 {
+        margin-bottom: 12px;
+
+        font-size: 14px;
+      }
+
+      .security-item {
+        display: flex;
+
+        justify-content: space-between;
+
+        padding: 10px 0;
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+        font-size: 11px;
+      }
+
+      .enabled {
+        color: #4ade80;
+        font-weight: 700;
+      }
+
+      .not-selected {
+        color: #8297aa;
+        font-weight: 700;
+      }
+
+      /* =============================
+       FOOTER
+    ============================== */
+
+      footer {
+        padding: 24px;
+
+        text-align: center;
+
+        color: #5e768b;
+
+        font-size: 11px;
+      }
+
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* =============================
+       RESPONSIVE
+    ============================== */
+
+      @media (max-width: 900px) {
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .page-heading {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-box {
+          max-width: none;
+        }
+
+        .toolbar-buttons {
+          width: 100%;
+        }
+
+        .clear-button {
+          width: 100%;
+        }
+
+        .modal-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .brand p {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ===========================
+       TOP BAR
+  ============================ -->
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">IX</div>
+
+        <div>
+          <h2>ThinkiX Management</h2>
+
+          <p>Industrial IoT Registration History</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="management.html" class="header-button"> Dashboard </a>
+
+        <a href="index.html" class="header-button"> Logout </a>
+      </div>
+    </header>
+
+    <!-- ===========================
+       MAIN CONTENT
+  ============================ -->
+
+    <main class="container">
+      <!-- PAGE HEADING -->
+
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">DEVICE MANAGEMENT RECORDS</p>
+
+          <h1>Registration History</h1>
+
+          <p>
+            Review every industrial device that has been registered through the
+            ThinkiX management workflow.
+          </p>
+        </div>
+
+        <div class="history-badge">DEVICE RECORDS</div>
+      </section>
+
+      <!-- ===========================
+         STATS
+    ============================ -->
+
+      <section class="stats">
+        <div class="stat-card">
+          <span> Total Registrations </span>
+
+          <strong id="totalRegistrations" class="blue"> 0 </strong>
+        </div>
+
+        <div class="stat-card">
+          <span> Registered </span>
+
+          <strong id="registeredCount" class="green"> 0 </strong>
+        </div>
+
+        <div class="stat-card">
+          <span> GNS3 Connected </span>
+
+          <strong id="gns3ConnectedCount" class="green"> 0 </strong>
+        </div>
+
+        <div class="stat-card">
+          <span> GNS3 Pending </span>
+
+          <strong id="gns3PendingCount" class="yellow"> 0 </strong>
+        </div>
+      </section>
+
+      <!-- ===========================
+         SEARCH / CONTROLS
+    ============================ -->
+
+      <section class="toolbar">
+        <div class="search-box">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search device name, ID, IP, VLAN or owner..."
+          />
+        </div>
+
+        <div class="toolbar-buttons">
+          <button type="button" class="clear-button" id="clearHistoryButton">
+            Clear History
+          </button>
+        </div>
+      </section>
+
+      <!-- ===========================
+         HISTORY TABLE
+    ============================ -->
+
+      <section class="history-panel">
+        <div class="table-wrapper" id="tableWrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>DEVICE</th>
+
+                <th>DEVICE ID</th>
+
+                <th>IP ADDRESS</th>
+
+                <th>VLAN</th>
+
+                <th>OWNER</th>
+
+                <th>REGISTERED</th>
+
+                <th>REGISTRATION</th>
+
+                <th>GNS3</th>
+
+                <th>DETAILS</th>
+              </tr>
+            </thead>
+
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">◉</div>
+
+          <h2>No Registered Devices</h2>
+
+          <p>
+            Register a device from the management dashboard and it will appear
+            here.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===========================
+       DETAILS MODAL
+  ============================ -->
+
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <h2 id="modalDeviceName">Device Details</h2>
+
+            <p id="modalRegistrationId"></p>
+          </div>
+
+          <button type="button" class="close-button" id="closeModalButton">
+            ×
+          </button>
+        </div>
+
+        <div class="modal-grid">
+          <div class="modal-info">
+            <small> DEVICE ID </small>
+
+            <strong id="modalDeviceId"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> DEVICE TYPE </small>
+
+            <strong id="modalDeviceType"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> IP ADDRESS </small>
+
+            <strong id="modalIp"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> MAC ADDRESS </small>
+
+            <strong id="modalMac"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> VLAN </small>
+
+            <strong id="modalVlan"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> DEVICE OWNER </small>
+
+            <strong id="modalOwner"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> OWNER EMAIL </small>
+
+            <strong id="modalEmail"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> REGISTERED AT </small>
+
+            <strong id="modalRegisteredAt"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> REGISTRATION STATUS </small>
+
+            <strong id="modalRegistrationStatus"> - </strong>
+          </div>
+
+          <div class="modal-info">
+            <small> GNS3 STATUS </small>
+
+            <strong id="modalGns3Status"> - </strong>
+          </div>
+        </div>
+
+        <!-- SECURITY -->
+
+        <div class="modal-security">
+          <h3>Security Configuration</h3>
+
+          <div class="security-item">
+            <span> MQTT over TLS </span>
+
+            <span id="modalTls"> - </span>
+          </div>
+
+          <div class="security-item">
+            <span> Device Certificate </span>
+
+            <span id="modalCertificate"> - </span>
+          </div>
+
+          <div class="security-item">
+            <span> IDS Monitoring </span>
+
+            <span id="modalMonitoring"> - </span>
+          </div>
+        </div>
+
+        <div class="modal-security">
+          <h3>Device Description</h3>
+
+          <p
+            id="modalDescription"
+            style="color: #8da2b5; font-size: 12px; line-height: 1.6"
+          >
+            -
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer>ThinkiX Manufacturing • Industrial IoT Device Management</footer>
+
+    <script>
+      "use strict";
+
+      /* =====================================
+       DEVICE TYPE DISPLAY NAMES
+    ====================================== */
+
+      function formatDeviceType(type) {
+        const types = {
+          temperature: "Temperature Sensor",
+
+          pressure: "Pressure Sensor",
+
+          vibration: "Vibration Sensor",
+
+          plc: "PLC Controller",
+
+          robotic: "Robotic Arm",
+
+          monitoring: "Monitoring Server",
+        };
+
+        return types[type] || type || "Industrial IoT Device";
+      }
+
+      /* =====================================
+       READ HISTORY
+    ====================================== */
+
+      function getHistory() {
+        try {
+          return JSON.parse(
+            localStorage.getItem("thinkixDeviceHistory") || "[]",
+          );
+        } catch (error) {
+          console.error("Unable to load history:", error);
+
+          return [];
+        }
+      }
+
+      let history = getHistory();
+
+      /* =====================================
+       ELEMENTS
+    ====================================== */
+
+      const tableBody = document.getElementById("historyTableBody");
+
+      const tableWrapper = document.getElementById("tableWrapper");
+
+      const emptyState = document.getElementById("emptyState");
+
+      const searchInput = document.getElementById("searchInput");
+
+      const clearHistoryButton = document.getElementById("clearHistoryButton");
+
+      /* =====================================
+       COUNTERS
+    ====================================== */
+
+      function updateCounters() {
+        const total = history.length;
+
+        const registered = history.filter(
+          (device) =>
+            device.registrationStatus === "Registered" ||
+            device.registrationStatus === "Processing",
+        ).length;
+
+        const connected = history.filter(
+          (device) => String(device.gns3Status).toLowerCase() === "connected",
+        ).length;
+
+        const pending = history.filter(
+          (device) =>
+            String(device.gns3Status || "pending").toLowerCase() === "pending",
+        ).length;
+
+        document.getElementById("totalRegistrations").textContent = total;
+
+        document.getElementById("registeredCount").textContent = registered;
+
+        document.getElementById("gns3ConnectedCount").textContent = connected;
+
+        document.getElementById("gns3PendingCount").textContent = pending;
+      }
+
+      /* =====================================
+       STATUS HTML
+    ====================================== */
+
+      function registrationStatusHtml(status) {
+        if (String(status).toLowerCase() === "registered") {
+          return `
+          <span class="status registered">
+            ● REGISTERED
+          </span>
+        `;
+        }
+
+        return `
+        <span class="status processing">
+          ● ${status || "PROCESSING"}
+        </span>
+      `;
+      }
+
+      function gns3StatusHtml(status) {
+        if (String(status).toLowerCase() === "connected") {
+          return `
+          <span class="status gns3-connected">
+            ● CONNECTED
+          </span>
+        `;
+        }
+
+        return `
+        <span class="status gns3-pending">
+          ● PENDING
+        </span>
+      `;
+      }
+
+      /* =====================================
+       RENDER HISTORY
+    ====================================== */
+
+      function renderHistory(records = history) {
+        tableBody.innerHTML = "";
+
+        if (records.length === 0) {
+          tableWrapper.style.display = "none";
+
+          emptyState.classList.add("show");
+
+          return;
+        }
+
+        tableWrapper.style.display = "block";
+
+        emptyState.classList.remove("show");
+
+        records.forEach((device) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+
+            <td>
+
+              <span class="device-name">
+                ${device.deviceName || "Unknown Device"}
+              </span>
+
+              <span class="small-muted">
+                ${formatDeviceType(device.deviceType)}
+              </span>
+
+            </td>
+
+
+            <td>
+              ${device.deviceId || "-"}
+            </td>
+
+
+            <td>
+              ${device.ipAddress || "-"}
+            </td>
+
+
+            <td>
+              ${device.vlan ? `VLAN ${device.vlan}` : "-"}
+            </td>
+
+
+            <td>
+
+              ${device.ownerName || "-"}
+
+              <span class="small-muted">
+                ${device.email || ""}
+              </span>
+
+            </td>
+
+
+            <td>
+              ${device.registeredAt || "-"}
+            </td>
+
+
+            <td>
+
+              ${registrationStatusHtml(device.registrationStatus)}
+
+            </td>
+
+
+            <td>
+
+              ${gns3StatusHtml(device.gns3Status)}
+
+            </td>
+
+
+            <td>
+
+              <button
+                class="view-button"
+                data-registration-id="${device.registrationId}"
+              >
+                View
+              </button>
+
+            </td>
+
+          `;
+
+          tableBody.appendChild(row);
+        });
+
+        document.querySelectorAll(".view-button").forEach((button) => {
+          button.addEventListener("click", () => {
+            openDeviceDetails(button.dataset.registrationId);
+          });
+        });
+      }
+
+      /* =====================================
+       SEARCH
+    ====================================== */
+
+      searchInput.addEventListener("input", () => {
+        const search = searchInput.value.toLowerCase().trim();
+
+        if (!search) {
+          renderHistory(history);
+
+          return;
+        }
+
+        const filtered = history.filter((device) => {
+          const combined = `
+
+                ${device.deviceName || ""}
+                ${device.deviceId || ""}
+                ${device.deviceType || ""}
+                ${device.ipAddress || ""}
+                ${device.macAddress || ""}
+                ${device.vlan || ""}
+                ${device.ownerName || ""}
+                ${device.email || ""}
+
+              `.toLowerCase();
+
+          return combined.includes(search);
+        });
+
+        renderHistory(filtered);
+      });
+
+      /* =====================================
+       DEVICE DETAILS MODAL
+    ====================================== */
+
+      const modalOverlay = document.getElementById("modalOverlay");
+
+      function openDeviceDetails(registrationId) {
+        const device = history.find(
+          (item) => item.registrationId === registrationId,
+        );
+
+        if (!device) {
+          return;
+        }
+
+        document.getElementById("modalDeviceName").textContent =
+          device.deviceName || "Device Details";
+
+        document.getElementById("modalRegistrationId").textContent =
+          device.registrationId || "";
+
+        document.getElementById("modalDeviceId").textContent =
+          device.deviceId || "-";
+
+        document.getElementById("modalDeviceType").textContent =
+          formatDeviceType(device.deviceType);
+
+        document.getElementById("modalIp").textContent =
+          device.ipAddress || "-";
+
+        document.getElementById("modalMac").textContent =
+          device.macAddress || "-";
+
+        document.getElementById("modalVlan").textContent = device.vlan
+          ? `VLAN ${device.vlan}`
+          : "-";
+
+        document.getElementById("modalOwner").textContent =
+          device.ownerName || "-";
+
+        document.getElementById("modalEmail").textContent = device.email || "-";
+
+        document.getElementById("modalRegisteredAt").textContent =
+          device.registeredAt || "-";
+
+        document.getElementById("modalRegistrationStatus").textContent =
+          device.registrationStatus || "Processing";
+
+        document.getElementById("modalGns3Status").textContent =
+          device.gns3Status || "Pending";
+
+        setSecurityValue("modalTls", device.tlsEnabled, "ENABLED");
+
+        setSecurityValue(
+          "modalCertificate",
+          device.certificateInstalled,
+          "INSTALLED",
+        );
+
+        setSecurityValue(
+          "modalMonitoring",
+          device.monitoringEnabled,
+          "ENABLED",
+        );
+
+        document.getElementById("modalDescription").textContent =
+          device.description || "No description provided.";
+
+        modalOverlay.classList.add("show");
+      }
+
+      function setSecurityValue(id, value, enabledText) {
+        const element = document.getElementById(id);
+
+        if (value) {
+          element.textContent = enabledText;
+
+          element.className = "enabled";
+        } else {
+          element.textContent = "NOT SELECTED";
+
+          element.className = "not-selected";
+        }
+      }
+
+      /* =====================================
+       CLOSE MODAL
+    ====================================== */
+
+      document
+        .getElementById("closeModalButton")
+        .addEventListener("click", () => {
+          modalOverlay.classList.remove("show");
+        });
+
+      modalOverlay.addEventListener("click", (event) => {
+        if (event.target === modalOverlay) {
+          modalOverlay.classList.remove("show");
+        }
+      });
+
+      /* =====================================
+       CLEAR HISTORY
+    ====================================== */
+
+      clearHistoryButton.addEventListener("click", () => {
+        const confirmed = confirm(
+          "Are you sure you want to delete all ThinkiX registration history from this browser?",
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        localStorage.removeItem("thinkixDeviceHistory");
+
+        history = [];
+
+        updateCounters();
+
+        renderHistory();
+      });
+
+      /* =====================================
+       INITIAL PAGE LOAD
+    ====================================== */
+
+      updateCounters();
+
+      renderHistory();
+    </script>
+  </body>
+</html>

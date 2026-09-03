@@ -1,0 +1,1048 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ThinkiX | Device Onboarding Status</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          radial-gradient(
+            circle at 15% 10%,
+            rgba(14, 165, 233, 0.12),
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 85% 15%,
+            rgba(37, 99, 235, 0.08),
+            transparent 30%
+          ),
+          #07111f;
+        color: #e8f0f8;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 5%;
+        background: rgba(7, 17, 31, 0.95);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(12px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .logo {
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #38bdf8, #2563eb);
+        font-weight: 800;
+      }
+
+      .brand h2 {
+        font-size: 18px;
+      }
+
+      .brand p {
+        margin-top: 4px;
+        color: #8198ad;
+        font-size: 12px;
+      }
+
+      .gns3-top-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 13px;
+        border-radius: 999px;
+        border: 1px solid rgba(250, 204, 21, 0.22);
+        background: rgba(250, 204, 21, 0.06);
+        color: #fde047;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .pending-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #facc15;
+        box-shadow: 0 0 12px #facc15;
+        animation: pulse 1.3s infinite;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 50px 20px 90px;
+      }
+
+      .page-heading {
+        margin-bottom: 30px;
+      }
+
+      .eyebrow {
+        color: #38bdf8;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
+
+      .page-heading h1 {
+        margin-top: 8px;
+        font-size: clamp(32px, 4vw, 48px);
+      }
+
+      .page-heading p:last-child {
+        margin-top: 10px;
+        color: #8399ad;
+        line-height: 1.6;
+      }
+
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 22px;
+      }
+
+      .panel {
+        padding: 24px;
+        border-radius: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        background: linear-gradient(
+          145deg,
+          rgba(15, 35, 58, 0.98),
+          rgba(8, 22, 39, 0.98)
+        );
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+      }
+
+      .panel h2 {
+        font-size: 20px;
+      }
+
+      .panel-sub {
+        margin-top: 7px;
+        color: #7d93a8;
+        font-size: 12px;
+      }
+
+      .process-list {
+        margin-top: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .process-step {
+        display: grid;
+        grid-template-columns: 38px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 14px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        opacity: 0.4;
+        transition: 0.35s;
+      }
+
+      .process-step.active {
+        opacity: 1;
+        transform: translateX(5px);
+        border-color: rgba(56, 189, 248, 0.2);
+        background: rgba(56, 189, 248, 0.04);
+      }
+
+      .process-step.done {
+        opacity: 1;
+        border-color: rgba(34, 197, 94, 0.2);
+        background: rgba(34, 197, 94, 0.04);
+      }
+
+      .process-step.pending {
+        opacity: 1;
+        border-color: rgba(250, 204, 21, 0.2);
+        background: rgba(250, 204, 21, 0.04);
+      }
+
+      .step-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(56, 189, 248, 0.08);
+        color: #38bdf8;
+        font-weight: 800;
+      }
+
+      .process-step.done .step-icon {
+        color: #4ade80;
+        background: rgba(34, 197, 94, 0.12);
+      }
+
+      .process-step.pending .step-icon {
+        color: #fde047;
+        background: rgba(250, 204, 21, 0.1);
+      }
+
+      .step-text strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .step-text small {
+        display: block;
+        margin-top: 4px;
+        color: #71879b;
+        font-size: 11px;
+      }
+
+      .step-status {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.6px;
+        color: #71869a;
+      }
+
+      .process-step.active .step-status {
+        color: #38bdf8;
+      }
+
+      .process-step.done .step-status {
+        color: #4ade80;
+      }
+
+      .process-step.pending .step-status {
+        color: #fde047;
+      }
+
+      .device-info-grid {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .info-card {
+        padding: 15px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .info-card small {
+        display: block;
+        color: #6f8599;
+        font-size: 10px;
+        letter-spacing: 1px;
+      }
+
+      .info-card strong {
+        display: block;
+        margin-top: 7px;
+        color: white;
+        font-size: 13px;
+        word-break: break-word;
+      }
+
+      .security-list,
+      .result-list {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .security-row,
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 12px;
+      }
+
+      .good {
+        color: #4ade80;
+        font-weight: 800;
+      }
+
+      .pending-text {
+        color: #fde047;
+        font-weight: 800;
+      }
+
+      .muted {
+        color: #7890a6;
+        font-weight: 700;
+      }
+
+      .gns3-box {
+        margin-top: 22px;
+        padding: 20px;
+        border-radius: 14px;
+        border: 1px solid rgba(250, 204, 21, 0.2);
+        background: rgba(250, 204, 21, 0.04);
+      }
+
+      .gns3-header {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .spinner {
+        width: 42px;
+        height: 42px;
+        border: 3px solid rgba(250, 204, 21, 0.18);
+        border-top-color: #facc15;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        flex-shrink: 0;
+      }
+
+      .gns3-box h3 {
+        color: #fde047;
+        font-size: 16px;
+      }
+
+      .gns3-box p {
+        margin-top: 6px;
+        color: #9a936d;
+        line-height: 1.5;
+        font-size: 11px;
+      }
+
+      .result-panel {
+        margin-top: 22px;
+        display: none;
+        animation: fadeUp 0.5s ease;
+      }
+
+      .result-panel.show {
+        display: block;
+      }
+
+      .result-banner {
+        padding: 20px;
+        border-radius: 14px;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        background: rgba(56, 189, 248, 0.05);
+      }
+
+      .result-banner h2 {
+        color: #8ee7ff;
+      }
+
+      .result-banner p {
+        margin-top: 7px;
+        color: #8da1b4;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .overall-status {
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 13px;
+        text-align: center;
+        border: 1px solid rgba(250, 204, 21, 0.16);
+        background: rgba(250, 204, 21, 0.05);
+      }
+
+      .overall-status small {
+        color: #8e865e;
+        font-size: 10px;
+        letter-spacing: 1px;
+      }
+
+      .overall-status strong {
+        display: block;
+        margin-top: 7px;
+        color: #fde047;
+        font-size: 18px;
+      }
+
+      .buttons {
+        margin-top: 22px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .btn {
+        padding: 12px 18px;
+        border-radius: 10px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.25s;
+        text-align: center;
+      }
+
+      .btn-primary {
+        color: white;
+        background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      }
+
+      .btn-secondary {
+        color: #cbd7e3;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0.35;
+        }
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 850px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .device-info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .buttons {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">IX</div>
+
+        <div>
+          <h2>ThinkiX Management</h2>
+          <p>Industrial IoT Device Onboarding</p>
+        </div>
+      </div>
+
+      <div class="gns3-top-status">
+        <span class="pending-dot"></span>
+        GNS3 CONNECTION PENDING
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="page-heading">
+        <p class="eyebrow">DEVICE ONBOARDING WORKFLOW</p>
+
+        <h1>Registering Industrial Device</h1>
+
+        <p>
+          Processing the device information entered by management, preparing the
+          security profile and attempting live network integration.
+        </p>
+      </section>
+
+      <section class="main-grid">
+        <!-- LEFT SIDE -->
+
+        <div>
+          <section class="panel">
+            <h2>Registration & Connection Process</h2>
+
+            <p class="panel-sub">
+              The system processes the submitted device step by step.
+            </p>
+
+            <div class="process-list">
+              <div class="process-step" id="step1">
+                <div class="step-icon">1</div>
+
+                <div class="step-text">
+                  <strong>Registration Received</strong>
+                  <small
+                    >Loading the information submitted by management.</small
+                  >
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step2">
+                <div class="step-icon">2</div>
+
+                <div class="step-text">
+                  <strong>Device ID Validation</strong>
+                  <small>Checking the submitted device identifier.</small>
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step3">
+                <div class="step-icon">3</div>
+
+                <div class="step-text">
+                  <strong>IP Address Validation</strong>
+                  <small>Confirming the IPv4 address format.</small>
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step4">
+                <div class="step-icon">4</div>
+
+                <div class="step-text">
+                  <strong>MAC Address Validation</strong>
+                  <small>Checking the registered hardware address.</small>
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step5">
+                <div class="step-icon">5</div>
+
+                <div class="step-text">
+                  <strong>VLAN Assignment</strong>
+                  <small>Preparing the approved industrial network zone.</small>
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step6">
+                <div class="step-icon">6</div>
+
+                <div class="step-text">
+                  <strong>Security Configuration</strong>
+                  <small>Applying the selected device security profile.</small>
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step7">
+                <div class="step-icon">7</div>
+
+                <div class="step-text">
+                  <strong>Monitoring Preparation</strong>
+                  <small
+                    >Preparing IDS and traffic-monitoring configuration.</small
+                  >
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step8">
+                <div class="step-icon">8</div>
+
+                <div class="step-text">
+                  <strong>Management Record</strong>
+                  <small>Saving the registration into device history.</small>
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+
+              <div class="process-step" id="step9">
+                <div class="step-icon">9</div>
+
+                <div class="step-text">
+                  <strong>GNS3 Network Connection</strong>
+                  <small
+                    >Trying to locate and verify the registered device in the
+                    lab.</small
+                  >
+                </div>
+
+                <span class="step-status"> WAITING </span>
+              </div>
+            </div>
+
+            <div class="gns3-box" id="gns3Box">
+              <div class="gns3-header">
+                <div class="spinner"></div>
+
+                <div>
+                  <h3>Trying to Connect to GNS3</h3>
+
+                  <p>
+                    Device registration is complete. ThinkiX is waiting for live
+                    GNS3 integration before the device can be verified as
+                    online.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="result-panel" id="resultPanel">
+              <div class="result-banner">
+                <h2>Registration Processing Complete</h2>
+
+                <p>
+                  Device information has been accepted and prepared. The device
+                  is registered, but it is not marked online until live GNS3
+                  verification succeeds.
+                </p>
+              </div>
+
+              <div class="result-list">
+                <div class="result-row">
+                  <span>Registration</span>
+                  <span class="good">SUCCESS</span>
+                </div>
+
+                <div class="result-row">
+                  <span>Device Information</span>
+                  <span class="good">VALIDATED</span>
+                </div>
+
+                <div class="result-row">
+                  <span>Security Profile</span>
+                  <span class="good">READY</span>
+                </div>
+
+                <div class="result-row">
+                  <span>Monitoring Configuration</span>
+                  <span class="good">PREPARED</span>
+                </div>
+
+                <div class="result-row">
+                  <span>Management Record</span>
+                  <span class="good">CREATED</span>
+                </div>
+
+                <div class="result-row">
+                  <span>GNS3 Verification</span>
+                  <span class="pending-text">PENDING</span>
+                </div>
+
+                <div class="result-row">
+                  <span>Live Device Status</span>
+                  <span class="muted">NOT VERIFIED</span>
+                </div>
+              </div>
+
+              <div class="overall-status">
+                <small> OVERALL DEVICE STATUS </small>
+
+                <strong> REGISTERED — AWAITING GNS3 CONNECTION </strong>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- RIGHT SIDE -->
+
+        <div>
+          <section class="panel">
+            <h2>Device Information</h2>
+
+            <p class="panel-sub">
+              Information entered by management from the client request.
+            </p>
+
+            <div class="device-info-grid">
+              <div class="info-card">
+                <small>DEVICE NAME</small>
+                <strong id="deviceNameDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>DEVICE ID</small>
+                <strong id="deviceIdDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>DEVICE TYPE</small>
+                <strong id="deviceTypeDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>NETWORK VLAN</small>
+                <strong id="vlanDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>IP ADDRESS</small>
+                <strong id="ipDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>MAC ADDRESS</small>
+                <strong id="macDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>DEVICE OWNER</small>
+                <strong id="ownerDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>OWNER EMAIL</small>
+                <strong id="emailDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>REGISTRATION ID</small>
+                <strong id="registrationIdDisplay">-</strong>
+              </div>
+
+              <div class="info-card">
+                <small>REGISTERED AT</small>
+                <strong id="registeredAtDisplay">-</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" style="margin-top: 22px">
+            <h2>Security Configuration</h2>
+
+            <p class="panel-sub">Security controls selected by management.</p>
+
+            <div class="security-list">
+              <div class="security-row">
+                <span>MQTT over TLS</span>
+                <span id="tlsStatus">-</span>
+              </div>
+
+              <div class="security-row">
+                <span>Device Certificate</span>
+                <span id="certificateStatus">-</span>
+              </div>
+
+              <div class="security-row">
+                <span>IDS Monitoring</span>
+                <span id="monitoringStatus">-</span>
+              </div>
+
+              <div class="security-row">
+                <span>Security Policy</span>
+                <span class="good">APPROVED</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" style="margin-top: 22px">
+            <h2>GNS3 Integration Status</h2>
+
+            <p class="panel-sub">
+              This section becomes live after GNS3 integration is enabled.
+            </p>
+
+            <div class="result-list">
+              <div class="result-row">
+                <span>Connection</span>
+                <span class="pending-text">TRYING TO CONNECT</span>
+              </div>
+
+              <div class="result-row">
+                <span>Node Verification</span>
+                <span class="muted">WAITING</span>
+              </div>
+
+              <div class="result-row">
+                <span>Interface State</span>
+                <span class="muted">WAITING</span>
+              </div>
+
+              <div class="result-row">
+                <span>Traffic Detection</span>
+                <span class="muted">WAITING</span>
+              </div>
+
+              <div class="result-row">
+                <span>Live Monitoring</span>
+                <span class="muted">WAITING</span>
+              </div>
+            </div>
+          </section>
+
+          <div class="buttons">
+            <a href="management.html" class="btn btn-primary">
+              ← Return to Dashboard
+            </a>
+
+            <a href="history.html" class="btn btn-secondary">
+              View Registration History
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      "use strict";
+
+      const storedDevice = sessionStorage.getItem("thinkixRegisteredDevice");
+
+      let device = {
+        registrationId: "-",
+        registeredAt: "-",
+        deviceName: "Unknown Device",
+        deviceId: "Not provided",
+        deviceType: "Not provided",
+        vlan: "Not assigned",
+        ipAddress: "Not provided",
+        macAddress: "Not provided",
+        ownerName: "Not provided",
+        email: "Not provided",
+        tlsEnabled: false,
+        certificateInstalled: false,
+        monitoringEnabled: false,
+        gns3Status: "Pending",
+      };
+
+      if (storedDevice) {
+        try {
+          device = JSON.parse(storedDevice);
+        } catch (error) {
+          console.error("Unable to read registered device:", error);
+        }
+      }
+
+      function formatDeviceType(type) {
+        const types = {
+          temperature: "Temperature Sensor",
+          pressure: "Pressure Sensor",
+          vibration: "Vibration Sensor",
+          plc: "PLC Controller",
+          robotic: "Robotic Arm",
+          monitoring: "Monitoring Server",
+        };
+
+        return types[type] || type || "Industrial IoT Device";
+      }
+
+      function securityValue(enabled, enabledText) {
+        return enabled ? enabledText : "NOT SELECTED";
+      }
+
+      function setSecurityStatus(id, enabled, enabledText) {
+        const element = document.getElementById(id);
+
+        element.textContent = securityValue(enabled, enabledText);
+
+        element.className = enabled ? "good" : "muted";
+      }
+
+      document.getElementById("deviceNameDisplay").textContent =
+        device.deviceName || "-";
+
+      document.getElementById("deviceIdDisplay").textContent =
+        device.deviceId || "-";
+
+      document.getElementById("deviceTypeDisplay").textContent =
+        formatDeviceType(device.deviceType);
+
+      document.getElementById("vlanDisplay").textContent = device.vlan
+        ? `VLAN ${device.vlan}`
+        : "-";
+
+      document.getElementById("ipDisplay").textContent =
+        device.ipAddress || "-";
+
+      document.getElementById("macDisplay").textContent =
+        device.macAddress || "-";
+
+      document.getElementById("ownerDisplay").textContent =
+        device.ownerName || "-";
+
+      document.getElementById("emailDisplay").textContent = device.email || "-";
+
+      document.getElementById("registrationIdDisplay").textContent =
+        device.registrationId || "-";
+
+      document.getElementById("registeredAtDisplay").textContent =
+        device.registeredAt || "-";
+
+      setSecurityStatus("tlsStatus", device.tlsEnabled, "ENABLED");
+
+      setSecurityStatus(
+        "certificateStatus",
+        device.certificateInstalled,
+        "INSTALLED",
+      );
+
+      setSecurityStatus(
+        "monitoringStatus",
+        device.monitoringEnabled,
+        "ENABLED",
+      );
+
+      const normalSteps = [
+        "step1",
+        "step2",
+        "step3",
+        "step4",
+        "step5",
+        "step6",
+        "step7",
+        "step8",
+      ];
+
+      let stepIndex = 0;
+
+      function processNormalSteps() {
+        if (stepIndex >= normalSteps.length) {
+          processGns3Step();
+
+          return;
+        }
+
+        const step = document.getElementById(normalSteps[stepIndex]);
+
+        const status = step.querySelector(".step-status");
+
+        step.classList.add("active");
+
+        status.textContent = "PROCESSING";
+
+        setTimeout(() => {
+          step.classList.remove("active");
+
+          step.classList.add("done");
+
+          step.querySelector(".step-icon").textContent = "✓";
+
+          status.textContent = "COMPLETE";
+
+          stepIndex++;
+
+          setTimeout(processNormalSteps, 220);
+        }, 650);
+      }
+
+      function processGns3Step() {
+        const gns3Step = document.getElementById("step9");
+
+        const status = gns3Step.querySelector(".step-status");
+
+        gns3Step.classList.add("active");
+
+        status.textContent = "CONNECTING";
+
+        setTimeout(() => {
+          gns3Step.classList.remove("active");
+
+          gns3Step.classList.add("pending");
+
+          gns3Step.querySelector(".step-icon").textContent = "⟳";
+
+          status.textContent = "PENDING";
+
+          completeRegistration();
+        }, 1800);
+      }
+
+      function completeRegistration() {
+        document.getElementById("resultPanel").classList.add("show");
+
+        updateHistoryRecord();
+      }
+
+      function updateHistoryRecord() {
+        let history = [];
+
+        try {
+          history = JSON.parse(
+            localStorage.getItem("thinkixDeviceHistory") || "[]",
+          );
+        } catch (error) {
+          console.error("Unable to read history:", error);
+
+          return;
+        }
+
+        const index = history.findIndex(
+          (item) => item.registrationId === device.registrationId,
+        );
+
+        const updatedRecord = {
+          ...device,
+
+          registrationStatus: "Registered",
+
+          securityProfile: "Ready",
+
+          monitoringStatus: "Prepared",
+
+          gns3Status: "Pending",
+
+          liveStatus: "Not Verified",
+
+          overallStatus: "Registered - Awaiting GNS3 Connection",
+        };
+
+        if (index >= 0) {
+          history[index] = updatedRecord;
+        } else {
+          history.unshift(updatedRecord);
+        }
+
+        localStorage.setItem("thinkixDeviceHistory", JSON.stringify(history));
+
+        sessionStorage.setItem(
+          "thinkixRegisteredDevice",
+          JSON.stringify(updatedRecord),
+        );
+      }
+
+      setTimeout(processNormalSteps, 600);
+    </script>
+  </body>
+</html>
