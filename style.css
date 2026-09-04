@@ -981,6 +981,14 @@ body {
   margin-bottom: 24px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+[id] {
+  scroll-margin-top: 110px;
+}
+
 .dashboard-stat-card {
   position: relative;
 
@@ -990,6 +998,10 @@ body {
   gap: 15px;
 
   padding: 24px;
+
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 
   border: 1px solid rgba(148, 163, 184, 0.12);
   border-radius: 17px;
