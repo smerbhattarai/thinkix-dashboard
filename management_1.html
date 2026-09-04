@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ThinkiX | Management Dashboard</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- =========================
+       TOP NAVIGATION
+  ========================== -->
+
+    <header class="dashboard-header">
+      <div class="dashboard-brand">
+        <div class="brand-icon"><img src="data:image/png;base64,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" alt="ThinkiX logo" /></div>
+
+        <div>
+          <h2>ThinkiX Management</h2>
+          <p>Industrial IoT Security Platform</p>
+        </div>
+      </div>
+
+      <div class="dashboard-header-right">
+        <nav class="dashboard-nav">
+          <a href="management.html" class="nav-tab active">Dashboard</a>
+          <a href="device-status.html" class="nav-tab">Device Status</a>
+          <a href="history.html" class="nav-tab">History</a>
+        </nav>
+
+        <div class="system-secure">
+          <span class="status-dot"></span>
+          SYSTEM ONLINE
+        </div>
+
+        <a href="index.html" class="logout-button"> Logout </a>
+      </div>
+    </header>
+
+    <!-- =========================
+       DASHBOARD
+  ========================== -->
+
+    <main class="dashboard-container">
+      <section class="dashboard-title">
+        <div>
+          <p class="section-label">INDUSTRIAL IoT MONITORING</p>
+
+          <h1>Management Dashboard</h1>
+
+          <p>
+            Monitor industrial devices, network activity, security events and
+            system interfaces.
+          </p>
+        </div>
+
+        <div class="live-badge">● LAST VERIFIED 2 SEP 2026</div>
+      </section>
+
+      <!-- =========================
+         SUMMARY CARDS
+    ========================== -->
+
+      <section class="dashboard-stats">
+        <div class="dashboard-stat-card">
+          <div class="stat-icon">◉</div>
+
+          <div>
+            <p>Connected Devices</p>
+            <h2 id="totalDevices">4</h2>
+          </div>
+        </div>
+
+        <div class="dashboard-stat-card">
+          <div class="stat-icon online-icon">●</div>
+
+          <div>
+            <p>Online Devices</p>
+            <h2 id="onlineDevices">3</h2>
+          </div>
+        </div>
+
+        <div class="dashboard-stat-card">
+          <div class="stat-icon alert-icon">⚠</div>
+
+          <div>
+            <p>Security Alerts</p>
+            <h2 id="alertCount">2</h2>
+          </div>
+        </div>
+
+        <div class="dashboard-stat-card">
+          <div class="stat-icon email-icon">☰</div>
+
+          <div>
+            <p>Event Log Entries</p>
+            <h2>3</h2>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
+         TRAFFIC + DEVICE STATUS
+    ========================== -->
+
+      <section class="dashboard-grid">
+        <!-- NETWORK TRAFFIC -->
+
+        <div class="dashboard-panel traffic-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">NETWORK MONITORING</p>
+
+              <h2>Verified Security Checks</h2>
+            </div>
+
+            <span class="live-badge"> ● LAST VERIFIED </span>
+          </div>
+
+          <div class="traffic-summary">
+            <div>
+              <small>TLS 1.3 Handshakes</small>
+              <strong>5</strong>
+            </div>
+
+            <div>
+              <small>Device Certs Issued</small>
+              <strong>4</strong>
+            </div>
+
+            <div>
+              <small>MQTT Messages Delivered</small>
+              <strong>4</strong>
+            </div>
+          </div>
+
+          <!-- SIMPLE GRAPH
+             JavaScript can animate this later -->
+
+          <div class="traffic-chart">
+            <svg viewBox="0 0 700 250" preserveAspectRatio="none">
+              <defs>
+                <linearGradient
+                  id="trafficGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.40" />
+
+                  <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+
+              <line x1="0" y1="50" x2="700" y2="50" class="chart-grid-line" />
+
+              <line x1="0" y1="125" x2="700" y2="125" class="chart-grid-line" />
+
+              <line x1="0" y1="200" x2="700" y2="200" class="chart-grid-line" />
+
+              <path
+                class="traffic-area"
+                d="
+                M0 250
+                L90 110
+                L280 60
+                L470 190
+                L660 165
+                L700 165
+                L700 250
+                L0 250
+                Z
+              "
+              />
+
+              <polyline
+                class="traffic-line"
+                points="
+                90,110
+                280,60
+                470,190
+                660,165
+              "
+              />
+            </svg>
+          </div>
+
+          <div class="chart-labels">
+            <span>Phase 2 — Segmentation (5)</span>
+            <span>Phase 3 — PKI/TLS (6)</span>
+            <span>Phase 4 — IDS (2)</span>
+            <span>Phase 5 — Quarantine (3)</span>
+          </div>
+        </div>
+
+        <!-- CONNECTED DEVICES -->
+
+        <div class="dashboard-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">DEVICE MONITORING</p>
+
+              <h2>Connected Devices</h2>
+            </div>
+          </div>
+
+          <div class="device-list">
+            <div class="device-row">
+              <span class="device-status online"></span>
+
+              <div class="device-info">
+                <strong>iot-sensor-vlan10</strong>
+                <small>10.10.10.12 • VLAN 10 • mTLS verified</small>
+              </div>
+
+              <span class="status-label online-text"> ONLINE </span>
+            </div>
+
+            <div class="device-row">
+              <span class="device-status offline"></span>
+
+              <div class="device-info">
+                <strong>plc1-robotics</strong>
+                <small>Cert serial 1000 • VLAN 20 • CRL revoked</small>
+              </div>
+
+              <span class="status-label offline-text"> REVOKED </span>
+            </div>
+
+            <div class="device-row">
+              <span class="device-status online"></span>
+
+              <div class="device-info">
+                <strong>Mosquitto-Broker</strong>
+                <small>10.10.30.11 • Port 8883 (TLS 1.3)</small>
+              </div>
+
+              <span class="status-label online-text"> ACTIVE </span>
+            </div>
+
+            <div class="device-row">
+              <span class="device-status online"></span>
+
+              <div class="device-info">
+                <strong>Suricata-IDS</strong>
+                <small>10.10.40.11 • 2 signatures live</small>
+              </div>
+
+              <span class="status-label online-text"> MONITORING </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
+         SECURITY + INTERFACES
+    ========================== -->
+
+      <section class="dashboard-grid">
+        <!-- SECURITY ALERTS -->
+
+        <div class="dashboard-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">SECURITY MONITORING</p>
+
+              <h2>Security Alerts</h2>
+            </div>
+
+            <span class="warning-badge"> 2 Alerts </span>
+          </div>
+
+          <div class="alert-list">
+            <div class="security-alert high-alert">
+              <div class="alert-symbol">⚠</div>
+
+              <div>
+                <strong> Unexpected TCP Connection — Auto-Quarantined </strong>
+
+                <p>Suricata sid 1000002 fired on 10.10.40.1; pfSense added the source to the quarantine table automatically, zero manual steps.</p>
+
+                <small> 03:19 UTC • HIGH </small>
+              </div>
+            </div>
+
+            <div class="security-alert medium-alert">
+              <div class="alert-symbol">!</div>
+
+              <div>
+                <strong> ICMP Probe Detected </strong>
+
+                <p>Suricata sid 1000001 fired on cross-host ping traffic to the Monitoring node.</p>
+
+                <small> 03:16 UTC • MEDIUM </small>
+              </div>
+            </div>
+
+            <div class="security-alert normal-alert">
+              <div class="alert-symbol">✓</div>
+
+              <div>
+                <strong> Cross-Zone MQTT Delivery Verified </strong>
+
+                <p>VLAN10 sensor → VLAN30 broker delivered over the 8883 conduit with mutual TLS, message received end to end.</p>
+
+                <small> 2 Sep 2026 • NORMAL </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERFACE STATUS -->
+
+        <div class="dashboard-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">NETWORK INTERFACES</p>
+
+              <h2>Interface Status</h2>
+            </div>
+          </div>
+
+          <div class="interface-list">
+            <div class="interface-row">
+              <div>
+                <strong>pfSense WAN</strong>
+                <small>Internet Gateway</small>
+              </div>
+
+              <span class="interface-up"> ● UP </span>
+            </div>
+
+            <div class="interface-row">
+              <div>
+                <strong>pfSense LAN</strong>
+                <small>Industrial Network</small>
+              </div>
+
+              <span class="interface-up"> ● UP </span>
+            </div>
+
+            <div class="interface-row">
+              <div>
+                <strong>MQTT Broker</strong>
+                <small>TCP 8883 • TLS 1.3 + mutual auth</small>
+              </div>
+
+              <span class="interface-up"> ● ACTIVE </span>
+            </div>
+
+            <div class="interface-row">
+              <div>
+                <strong>Suricata IDS</strong>
+                <small>Security Monitoring</small>
+              </div>
+
+              <span class="interface-monitoring"> ● MONITORING </span>
+            </div>
+
+            <div class="interface-row">
+              <div>
+                <strong>CRL Enforcement</strong>
+                <small>Revoked certs rejected at handshake</small>
+              </div>
+
+              <span class="interface-up"> ● ACTIVE </span>
+            </div>
+
+            <div class="interface-row">
+              <div>
+                <strong>Automated Quarantine</strong>
+                <small>Suricata → syslog → pf table, no manual step</small>
+              </div>
+
+              <span class="interface-up"> ● ACTIVE </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
+         GNS3 + EMAIL HISTORY
+    ========================== -->
+
+      <section class="dashboard-grid">
+        <!-- GNS3 -->
+
+        <div class="dashboard-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">LAB INTEGRATION</p>
+
+              <h2>GNS3 Lab Evidence</h2>
+            </div>
+
+            <span class="live-badge"> ● HANDS-ON VERIFIED </span>
+          </div>
+
+          <div class="gns3-message">
+            <div class="gns3-icon">◉</div>
+
+            <div>
+              <h3>By design, this isn't wired to a public live feed</h3>
+
+              <p>The lab's VLANs sit behind pfSense with no route out to the public internet — that isolation is the whole point of the architecture, so this page doesn't poll it directly.</p>
+
+              <p>
+                Every figure on this page instead comes from a hands-on
+                verification pass inside GNS3 (console/VNC access only, no
+                SSH used anywhere in the lab), captured 2 Sep 2026.
+              </p>
+            </div>
+          </div>
+
+          <div class="gns3-nodes">
+            <span>iot-sensor-vlan10</span>
+            <span>plc1-robotics</span>
+            <span>pfSense</span>
+            <span>Suricata</span>
+            <span>Mosquitto</span>
+          </div>
+        </div>
+
+        <!-- EMAIL HISTORY -->
+
+        <div class="dashboard-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">EVIDENCE TRAIL</p>
+
+              <h2>Security Event Log</h2>
+            </div>
+          </div>
+
+          <div class="email-history">
+            <div class="email-row">
+              <div class="email-icon-small">⛔</div>
+
+              <div>
+                <strong> Certificate Revoked </strong>
+
+                <p>plc1-robotics revoked via CRL; broker verified as rejected (error 23: certificate revoked).</p>
+
+                <small> 2 Sep 2026 </small>
+              </div>
+
+              <span class="email-sent"> LOGGED </span>
+            </div>
+
+            <div class="email-row">
+              <div class="email-icon-small">✔</div>
+
+              <div>
+                <strong> Device Onboarded </strong>
+
+                <p>iot-sensor-vlan10 issued a device cert by the intermediate CA and verified onto VLAN 10.</p>
+
+                <small> 2 Sep 2026 </small>
+              </div>
+
+              <span class="email-sent"> LOGGED </span>
+            </div>
+
+            <div class="email-row">
+              <div class="email-icon-small">⚠</div>
+
+              <div>
+                <strong> Source Auto-Quarantined </strong>
+
+                <p>10.10.40.1 blocked at pfSense following an unstaged Suricata detection — no operator action taken.</p>
+
+                <small> 2 Sep 2026 </small>
+              </div>
+
+              <span class="email-sent"> LOGGED </span>
+            </div>
+          </div>
+
+          <div class="management-email">
+            Full evidence &amp; console log maintained for:
+
+            <strong> BN304 project report </strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
+         DEVICE REGISTRATION
+    ========================== -->
+
+      <section class="form-card dashboard-registration" id="registration">
+        <div class="form-header">
+          <div>
+            <p class="section-label">DEVICE ONBOARDING</p>
+
+            <h2>Register New Industrial Device</h2>
+
+            <p>
+              Enter the device information and security configuration below.
+            </p>
+          </div>
+
+          <div class="security-ring">🔐</div>
+        </div>
+
+        <form id="deviceForm" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="deviceName"> Device Name </label>
+
+              <input
+                type="text"
+                id="deviceName"
+                placeholder="Temperature Sensor 01"
+              />
+
+              <small class="error-message" id="deviceNameError"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="deviceId"> Device ID </label>
+
+              <input type="text" id="deviceId" placeholder="TEMP-SENSOR-001" />
+
+              <small class="error-message" id="deviceIdError"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="deviceType"> Device Type </label>
+
+              <select id="deviceType">
+                <option value="">Select device type</option>
+
+                <option value="temperature">Temperature Sensor</option>
+
+                <option value="pressure">Pressure Sensor</option>
+
+                <option value="vibration">Vibration Sensor</option>
+
+                <option value="plc">PLC Controller</option>
+
+                <option value="robotic">Robotic Arm</option>
+
+                <option value="monitoring">Monitoring Server</option>
+              </select>
+
+              <small class="error-message" id="deviceTypeError"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="vlan"> Network VLAN </label>
+
+              <select id="vlan">
+                <option value="">Select VLAN</option>
+
+                <option value="10">VLAN 10 — IoT Sensors</option>
+
+                <option value="20">VLAN 20 — Robotics / PLC</option>
+
+                <option value="30">VLAN 30 — Firewall</option>
+
+                <option value="40">VLAN 40 — Monitoring</option>
+
+                <option value="50">VLAN 50 — Management</option>
+              </select>
+
+              <small class="error-message" id="vlanError"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="ipAddress"> IP Address </label>
+
+              <input type="text" id="ipAddress" placeholder="192.168.10.10" />
+
+              <small class="error-message" id="ipAddressError"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="macAddress"> MAC Address </label>
+
+              <input
+                type="text"
+                id="macAddress"
+                placeholder="00:1A:2B:3C:4D:5E"
+              />
+
+              <small class="error-message" id="macAddressError"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="ownerName"> Device Owner </label>
+
+              <input type="text" id="ownerName" placeholder="Production Team" />
+
+              <small class="error-message" id="ownerNameError"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="email"> Owner Email </label>
+
+              <input
+                type="email"
+                id="email"
+                placeholder="production@thinkix.com"
+              />
+
+              <small class="error-message" id="emailError"></small>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description"> Device Description </label>
+
+            <textarea
+              id="description"
+              rows="5"
+              maxlength="300"
+              placeholder="Describe the device and its role in the industrial network..."
+            ></textarea>
+
+            <small class="character-count" id="characterCount">
+              0 / 300 characters
+            </small>
+
+            <small class="error-message" id="descriptionError"></small>
+          </div>
+
+          <div class="security-box">
+            <div class="security-box-header">
+              <div>
+                <h3>Security Configuration</h3>
+
+                <p>Select the controls enabled for this device.</p>
+              </div>
+
+              <span class="shield"> 🛡️ </span>
+            </div>
+
+            <label class="toggle-row">
+              <input type="checkbox" id="tlsEnabled" />
+
+              <span class="toggle"></span>
+
+              <span> MQTT over TLS </span>
+            </label>
+
+            <label class="toggle-row">
+              <input type="checkbox" id="certificateInstalled" />
+
+              <span class="toggle"></span>
+
+              <span> Device certificate installed </span>
+            </label>
+
+            <label class="toggle-row">
+              <input type="checkbox" id="monitoringEnabled" />
+
+              <span class="toggle"></span>
+
+              <span> Zeek & Suricata monitoring </span>
+            </label>
+          </div>
+
+          <label class="agreement-row">
+            <input type="checkbox" id="agreement" />
+
+            <span>
+              I confirm that this device follows the approved security and
+              network policy.
+            </span>
+          </label>
+
+          <small class="error-message" id="agreementError"></small>
+
+          <div class="button-group">
+            <button type="reset" class="secondary-button" id="resetButton">
+              Clear Form
+            </button>
+
+            <button type="submit" class="primary-button">
+              <span> Register Device </span>
+
+              <span class="button-arrow"> → </span>
+            </button>
+          </div>
+        </form>
+
+        <div class="loading-box" id="loadingBox">
+          <div class="loader"></div>
+
+          <p>Validating secure device configuration...</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">✓</div>
+
+          <div>
+            <h3>Device Registration Successful</h3>
+
+            <p>Device information passed front-end validation successfully.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>ThinkiX Manufacturing • Secure Industrial IoT Management Platform</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
