@@ -389,13 +389,30 @@ function createRegisteredDeviceRow(device) {
     deviceRow.dataset.registrationId = device.registrationId;
   }
 
+  /* A device only shows as (simulated) online once device-status.html
+     has run its simulated GNS3 confirmation for it. Until then it stays
+     the original honest "registered but unverified" yellow state. */
+
+  const isSimulatedOnline = device.gns3Status === "Confirmed (Simulated)";
+
+  const dotColor = isSimulatedOnline ? "#4ade80" : "#facc15";
+  const dotGlow = isSimulatedOnline
+    ? "rgba(74,222,128,.7)"
+    : "rgba(250,204,21,.7)";
+  const subLineColor = isSimulatedOnline ? "#4ade80" : "#facc15";
+  const subLineText = isSimulatedOnline
+    ? "GNS3 Verified (Simulated)"
+    : "GNS3 Pending";
+  const badgeColor = isSimulatedOnline ? "#4ade80" : "#fde047";
+  const badgeText = isSimulatedOnline ? "ONLINE (SIMULATED)" : "REGISTERED";
+
   deviceRow.innerHTML = `
 
     <span
       class="device-status"
       style="
-        background:#facc15;
-        box-shadow:0 0 10px rgba(250,204,21,.7);
+        background:${dotColor};
+        box-shadow:0 0 10px ${dotGlow};
       "
     ></span>
 
@@ -413,21 +430,21 @@ function createRegisteredDeviceRow(device) {
 
       <small
         style="
-          color:#facc15;
+          color:${subLineColor};
           margin-top:4px;
         "
       >
         ${formatDeviceType(device.deviceType)}
-        • GNS3 Pending
+        • ${subLineText}
       </small>
 
     </div>
 
     <span
       class="status-label"
-      style="color:#fde047;"
+      style="color:${badgeColor};"
     >
-      REGISTERED
+      ${badgeText}
     </span>
 
   `;
@@ -477,13 +494,19 @@ function loadRegisteredDevices() {
      Existing lab devices = 4
      Registered devices = history count
 
-     ONLINE DEVICES stays at 3 because registrations
-     are NOT considered live until GNS3 confirms them.
+     ONLINE DEVICES starts at 3 (the real lab devices) and only
+     gains a registered device once device-status.html has run
+     its simulated GNS3 confirmation for it — a plain registration
+     is NOT considered live until that (simulated) confirmation.
   --------------------------------------------------------- */
+
+  const simulatedOnlineCount = history.filter(
+    (device) => device.gns3Status === "Confirmed (Simulated)",
+  ).length;
 
   totalDevices = SIMULATED_LAB_DEVICE_COUNT + registeredDeviceCount;
 
-  onlineDevices = SIMULATED_ONLINE_COUNT;
+  onlineDevices = SIMULATED_ONLINE_COUNT + simulatedOnlineCount;
 
   if (totalDevicesElement) {
     totalDevicesElement.textContent = totalDevices;
