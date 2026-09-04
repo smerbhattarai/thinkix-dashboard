@@ -405,6 +405,57 @@
         font-size: 11px;
       }
 
+      /* SIMULATED SUCCESS STATE */
+
+      .gns3-box.simulated-success {
+        border-color: rgba(34, 197, 94, 0.25);
+        background: rgba(34, 197, 94, 0.05);
+      }
+
+      .gns3-box.simulated-success h3 {
+        color: #4ade80;
+      }
+
+      .gns3-box.simulated-success p {
+        color: #8fae9c;
+      }
+
+      .gns3-check-icon {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: rgba(34, 197, 94, 0.14);
+        color: #4ade80;
+        font-size: 20px;
+        font-weight: 800;
+      }
+
+      .gns3-top-status.simulated-success {
+        border-color: rgba(34, 197, 94, 0.25);
+        background: rgba(34, 197, 94, 0.08);
+        color: #86efac;
+      }
+
+      .gns3-top-status.simulated-success .pending-dot {
+        background: #22c55e;
+        box-shadow: 0 0 12px #22c55e;
+        animation: none;
+      }
+
+      .simulation-disclaimer {
+        margin-top: 14px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        border: 1px dashed rgba(250, 204, 21, 0.3);
+        background: rgba(250, 204, 21, 0.04);
+        color: #b8ad78;
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
       .result-panel {
         margin-top: 22px;
         display: none;
@@ -453,6 +504,19 @@
         margin-top: 7px;
         color: #fde047;
         font-size: 18px;
+      }
+
+      .overall-status.simulated-success {
+        border-color: rgba(34, 197, 94, 0.22);
+        background: rgba(34, 197, 94, 0.06);
+      }
+
+      .overall-status.simulated-success small {
+        color: #7fae8f;
+      }
+
+      .overall-status.simulated-success strong {
+        color: #4ade80;
       }
 
       .buttons {
@@ -551,9 +615,9 @@
       </nav>
 
       <div class="topbar-right">
-        <div class="gns3-top-status">
-          <span class="pending-dot"></span>
-          GNS3 CONNECTION PENDING
+        <div class="gns3-top-status" id="gns3TopStatus">
+          <span class="pending-dot" id="gns3TopStatusDot"></span>
+          <span id="gns3TopStatusText">GNS3 CONNECTION PENDING</span>
         </div>
 
         <a href="index.html" class="logout-link">Logout</a>
@@ -693,12 +757,12 @@
 
             <div class="gns3-box" id="gns3Box">
               <div class="gns3-header">
-                <div class="spinner"></div>
+                <div class="spinner" id="gns3Spinner"></div>
 
                 <div>
-                  <h3>Trying to Connect to GNS3</h3>
+                  <h3 id="gns3BoxTitle">Trying to Connect to GNS3</h3>
 
-                  <p>
+                  <p id="gns3BoxText">
                     Device registration is complete. ThinkiX is waiting for live
                     GNS3 integration before the device can be verified as
                     online.
@@ -708,10 +772,10 @@
             </div>
 
             <div class="result-panel" id="resultPanel">
-              <div class="result-banner">
-                <h2>Registration Processing Complete</h2>
+              <div class="result-banner" id="resultBanner">
+                <h2 id="resultBannerTitle">Registration Processing Complete</h2>
 
-                <p>
+                <p id="resultBannerText">
                   Device information has been accepted and prepared. The device
                   is registered, but it is not marked online until live GNS3
                   verification succeeds.
@@ -746,20 +810,26 @@
 
                 <div class="result-row">
                   <span>GNS3 Verification</span>
-                  <span class="pending-text">PENDING</span>
+                  <span class="pending-text" id="gns3VerificationStatus">PENDING</span>
                 </div>
 
                 <div class="result-row">
                   <span>Live Device Status</span>
-                  <span class="muted">NOT VERIFIED</span>
+                  <span class="muted" id="liveDeviceStatus">NOT VERIFIED</span>
                 </div>
               </div>
 
-              <div class="overall-status">
+              <div class="overall-status" id="overallStatusBox">
                 <small> OVERALL DEVICE STATUS </small>
 
-                <strong> REGISTERED — AWAITING GNS3 CONNECTION </strong>
+                <strong id="overallStatusText"> REGISTERED — AWAITING GNS3 CONNECTION </strong>
               </div>
+
+              <p class="simulation-disclaimer" id="simulationDisclaimer" hidden>
+                Simulated for demo purposes — this page has no live backend
+                connection to the actual GNS3 lab, so this confirmation is not
+                a real network verification.
+              </p>
             </div>
           </section>
         </div>
@@ -858,34 +928,34 @@
           <section class="panel" style="margin-top: 22px">
             <h2>GNS3 Integration Status</h2>
 
-            <p class="panel-sub">
+            <p class="panel-sub" id="gns3IntegrationSub">
               This section becomes live after GNS3 integration is enabled.
             </p>
 
             <div class="result-list">
               <div class="result-row">
                 <span>Connection</span>
-                <span class="pending-text">TRYING TO CONNECT</span>
+                <span class="pending-text" id="gns3RowConnection">TRYING TO CONNECT</span>
               </div>
 
               <div class="result-row">
                 <span>Node Verification</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowNode">WAITING</span>
               </div>
 
               <div class="result-row">
                 <span>Interface State</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowInterface">WAITING</span>
               </div>
 
               <div class="result-row">
                 <span>Traffic Detection</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowTraffic">WAITING</span>
               </div>
 
               <div class="result-row">
                 <span>Live Monitoring</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowMonitoring">WAITING</span>
               </div>
             </div>
           </section>
@@ -1070,10 +1140,90 @@
       function completeRegistration() {
         document.getElementById("resultPanel").classList.add("show");
 
-        updateHistoryRecord();
+        updateHistoryRecord(false);
+
+        /* =====================================
+               SIMULATED GNS3 CONFIRMATION
+
+               NOTE: this page has no real backend
+               connection to the GNS3 lab. After a
+               short delay we flip the UI to a
+               clearly-labeled SIMULATED success
+               state for demo purposes only — this
+               is not a live network verification.
+            ====================================== */
+
+        setTimeout(simulateGns3Success, 3200);
       }
 
-      function updateHistoryRecord() {
+      function simulateGns3Success() {
+        const gns3Step = document.getElementById("step9");
+        const stepStatus = gns3Step.querySelector(".step-status");
+
+        gns3Step.classList.remove("pending");
+        gns3Step.classList.add("done");
+        gns3Step.querySelector(".step-icon").textContent = "✓";
+        stepStatus.textContent = "CONNECTED (SIMULATED)";
+
+        const gns3Box = document.getElementById("gns3Box");
+        gns3Box.classList.add("simulated-success");
+
+        const spinner = document.getElementById("gns3Spinner");
+        spinner.classList.remove("spinner");
+        spinner.classList.add("gns3-check-icon");
+        spinner.textContent = "✓";
+
+        document.getElementById("gns3BoxTitle").textContent =
+          "Connected to GNS3 (Simulated)";
+        document.getElementById("gns3BoxText").textContent =
+          "This is a simulated confirmation for demo purposes — this page has no live backend wired to the actual GNS3 lab, so no real network check occurred.";
+
+        const topStatus = document.getElementById("gns3TopStatus");
+        topStatus.classList.add("simulated-success");
+        document.getElementById("gns3TopStatusText").textContent =
+          "GNS3 CONNECTION ONLINE (SIMULATED)";
+
+        const gns3VerificationStatus = document.getElementById(
+          "gns3VerificationStatus",
+        );
+        gns3VerificationStatus.classList.remove("pending-text");
+        gns3VerificationStatus.classList.add("good");
+        gns3VerificationStatus.textContent = "CONFIRMED (SIMULATED)";
+
+        const liveDeviceStatus = document.getElementById("liveDeviceStatus");
+        liveDeviceStatus.classList.remove("muted");
+        liveDeviceStatus.classList.add("good");
+        liveDeviceStatus.textContent = "ONLINE (SIMULATED)";
+
+        const overallStatusBox = document.getElementById("overallStatusBox");
+        overallStatusBox.classList.add("simulated-success");
+        document.getElementById("overallStatusText").textContent =
+          "REGISTERED — GNS3 VERIFIED (SIMULATED)";
+
+        document.getElementById("simulationDisclaimer").hidden = false;
+
+        document.getElementById("gns3IntegrationSub").textContent =
+          "Simulated confirmation — no live GNS3 integration is actually connected.";
+
+        const integrationRows = [
+          ["gns3RowConnection", "CONNECTED (SIMULATED)"],
+          ["gns3RowNode", "VERIFIED (SIMULATED)"],
+          ["gns3RowInterface", "UP (SIMULATED)"],
+          ["gns3RowTraffic", "DETECTED (SIMULATED)"],
+          ["gns3RowMonitoring", "ACTIVE (SIMULATED)"],
+        ];
+
+        integrationRows.forEach(([id, text]) => {
+          const el = document.getElementById(id);
+          el.classList.remove("pending-text", "muted");
+          el.classList.add("good");
+          el.textContent = text;
+        });
+
+        updateHistoryRecord(true);
+      }
+
+      function updateHistoryRecord(simulated) {
         let history = [];
 
         try {
@@ -1099,11 +1249,13 @@
 
           monitoringStatus: "Prepared",
 
-          gns3Status: "Pending",
+          gns3Status: simulated ? "Confirmed (Simulated)" : "Pending",
 
-          liveStatus: "Not Verified",
+          liveStatus: simulated ? "Online (Simulated)" : "Not Verified",
 
-          overallStatus: "Registered - Awaiting GNS3 Connection",
+          overallStatus: simulated
+            ? "Registered - GNS3 Verified (Simulated)"
+            : "Registered - Awaiting GNS3 Connection",
         };
 
         if (index >= 0) {
