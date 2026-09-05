@@ -1829,6 +1829,66 @@ html {
   background: #4ade80;
 }
 
+/* TEMPERATURE SENSOR PANEL */
+
+.temperature-readout-row {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 16px 18px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(8, 22, 39, 0.5);
+}
+
+.temperature-value {
+  font-size: 34px;
+  font-weight: 800;
+  color: #38bdf8;
+  flex-shrink: 0;
+  min-width: 110px;
+}
+
+.temperature-readout-row strong {
+  display: block;
+  color: white;
+  font-size: 14px;
+}
+
+.temperature-readout-row small {
+  display: block;
+  margin-top: 3px;
+  color: #7f97ad;
+  font-size: 11px;
+}
+
+.temperature-bar {
+  margin-top: 16px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.temperature-bar-fill {
+  height: 100%;
+  width: 30%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #38bdf8, #f97316);
+  transition: width 0.6s ease;
+}
+
+.temperature-bar-labels {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  color: #7f97ad;
+  font-size: 11px;
+}
+
 /* REGISTRATION CARD INSIDE DASHBOARD */
 
 .dashboard-registration {
