@@ -968,6 +968,43 @@ window.addEventListener("load", () => {
 });
 
 /* =========================================================
+   VIRTUAL ACTUATOR SWITCH (SIMULATED)
+
+   Same-browser-only demo: this toggle writes to localStorage,
+   and sensor.html (opened in another tab/window on this same
+   site) reacts to it live via the "storage" event. There is no
+   real connection into the GNS3 lab here — the lab's VLANs have
+   no route to the public internet, by design.
+========================================================= */
+
+const ACTUATOR_KEY = "thinkixActuatorState";
+
+const actuatorToggle = document.getElementById("actuatorToggle");
+const actuatorStateLabel = document.getElementById("actuatorStateLabel");
+
+function renderActuatorState(isOn) {
+  if (actuatorToggle) {
+    actuatorToggle.checked = isOn;
+  }
+
+  if (actuatorStateLabel) {
+    actuatorStateLabel.textContent = `Sensor Indicator: ${
+      isOn ? "ON" : "OFF"
+    } (Simulated)`;
+  }
+}
+
+if (actuatorToggle) {
+  renderActuatorState(localStorage.getItem(ACTUATOR_KEY) === "on");
+
+  actuatorToggle.addEventListener("change", () => {
+    const isOn = actuatorToggle.checked;
+    localStorage.setItem(ACTUATOR_KEY, isOn ? "on" : "off");
+    renderActuatorState(isOn);
+  });
+}
+
+/* =========================================================
    DEVELOPMENT INFORMATION
 ========================================================= */
 
