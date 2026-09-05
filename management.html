@@ -489,6 +489,47 @@
       </section>
 
       <!-- =========================
+         VIRTUAL ACTUATOR CONTROL
+    ========================== -->
+
+      <section class="dashboard-panel actuator-panel" id="actuator-control">
+        <div class="panel-header">
+          <div>
+            <p class="section-label">ACTUATOR CONTROL</p>
+
+            <h2>Virtual Sensor Switch (Simulated)</h2>
+          </div>
+
+          <a href="sensor.html" target="_blank" rel="noopener" class="live-badge actuator-open-link">
+            ↗ Open Virtual Sensor View
+          </a>
+        </div>
+
+        <p class="actuator-description">
+          Flip the switch below, then open the virtual sensor view (link
+          above) in a second tab or window next to this one — it updates
+          instantly. This demonstrates the operator → actuator control
+          concept from the dashboard down to a device indicator. It's a
+          same-browser simulation shared through local storage, not a live
+          connection into the isolated GNS3 lab — the lab's VLANs have no
+          route to the public internet, by design, same reasoning as the
+          GNS3 Lab Evidence panel above.
+        </p>
+
+        <div class="actuator-control-row">
+          <label class="switch">
+            <input type="checkbox" id="actuatorToggle" />
+            <span class="slider"></span>
+          </label>
+
+          <div>
+            <strong id="actuatorStateLabel">Sensor Indicator: OFF (Simulated)</strong>
+            <small>iot-sensor-vlan10 • simulated actuator, this browser only</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
          DEVICE REGISTRATION
     ========================== -->
 

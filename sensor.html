@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ThinkiX | Virtual Sensor</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        background: #000;
+        color: #fff;
+
+        transition:
+          background 0.4s ease,
+          color 0.4s ease;
+      }
+
+      body.on {
+        background: #fff;
+        color: #000;
+      }
+
+      .sensor-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 18px 5%;
+
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+
+        opacity: 0.65;
+      }
+
+      .sensor-topbar a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 2px;
+      }
+
+      .sensor-label {
+        font-size: 13px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        opacity: 0.55;
+        margin-bottom: 16px;
+      }
+
+      .sensor-state {
+        font-size: clamp(48px, 10vw, 110px);
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+
+      .sensor-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        margin: 22px auto 0;
+        background: #facc15;
+        box-shadow: 0 0 16px #facc15;
+        transition:
+          background 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      body.on .sensor-dot {
+        background: #22c55e;
+        box-shadow: 0 0 16px #22c55e;
+      }
+
+      .sensor-note {
+        margin-top: 30px;
+        max-width: 480px;
+        text-align: center;
+        font-size: 12px;
+        opacity: 0.55;
+        line-height: 1.6;
+        padding: 0 24px;
+      }
+    </style>
+  </head>
+
+  <body id="sensorBody">
+    <div class="sensor-topbar">
+      <span>ThinkiX Virtual Sensor — iot-sensor-vlan10 (Simulated)</span>
+      <a href="management.html">← Back to Dashboard</a>
+    </div>
+
+    <p class="sensor-label">Sensor Indicator</p>
+    <div class="sensor-state" id="sensorStateText">OFF</div>
+    <div class="sensor-dot" id="sensorDot"></div>
+
+    <p class="sensor-note">
+      This page mirrors the actuator switch on the Management Dashboard live,
+      using your browser's local storage — open both pages side by side and
+      flip the switch to watch this update instantly. It's a same-browser
+      simulation, not a real signal from the physical GNS3 lab (the lab's
+      VLANs have no route to the public internet, by design).
+    </p>
+
+    <script>
+      const ACTUATOR_KEY = "thinkixActuatorState";
+
+      const body = document.getElementById("sensorBody");
+      const stateText = document.getElementById("sensorStateText");
+
+      function applyState(isOn) {
+        body.classList.toggle("on", isOn);
+        stateText.textContent = isOn ? "ON" : "OFF";
+      }
+
+      applyState(localStorage.getItem(ACTUATOR_KEY) === "on");
+
+      window.addEventListener("storage", (event) => {
+        if (event.key === ACTUATOR_KEY) {
+          applyState(event.newValue === "on");
+        }
+      });
+
+      /* Fallback poll — harmless if the storage event already fired;
+         covers setups where cross-tab storage events don't propagate. */
+      setInterval(() => {
+        applyState(localStorage.getItem(ACTUATOR_KEY) === "on");
+      }, 1000);
+    </script>
+  </body>
+</html>
