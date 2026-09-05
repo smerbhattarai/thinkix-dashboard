@@ -980,6 +980,37 @@ function updateLiveStatus(data) {
     const displayTimestamp = formatLiveTimestampAEST(data.last_updated);
     heroBadge.textContent = `● LIVE — Monitoring node, ${displayTimestamp}${anomalyNote}`;
   }
+
+  /* Genuine live reachability check for iot-sensor-vlan10, pushed by
+     github_push.py after the Monitoring node pings the sensor over a
+     dedicated, documented conduit (Monitoring -> VLAN10, ICMP only).
+     This is the ONE device row on this dashboard that reflects the
+     sensor's real current state rather than a one-time test result —
+     every other device row here is evidence from earlier testing, not
+     a live poll. Old payloads without this field simply leave the row
+     showing its last-known state, same fail-silent behavior as the
+     rest of this pipeline. */
+  const sensorDot = document.getElementById("sensorLiveDot");
+  const sensorLabel = document.getElementById("sensorLiveStatusLabel");
+  const sensorSubline = document.getElementById("sensorLiveSubline");
+
+  if (sensorDot && sensorLabel && typeof data.sensor_status === "string") {
+    const isOnline = data.sensor_status === "online";
+
+    sensorDot.classList.toggle("online", isOnline);
+    sensorDot.classList.toggle("offline", !isOnline);
+
+    sensorLabel.textContent = isOnline ? " ONLINE " : " OFFLINE ";
+    sensorLabel.classList.toggle("online-text", isOnline);
+    sensorLabel.classList.toggle("offline-text", !isOnline);
+
+    if (sensorSubline) {
+      sensorSubline.textContent = isOnline
+        ? "● Live-checked from Monitoring node"
+        : "● Live-checked from Monitoring node — no reply";
+      sensorSubline.style.color = isOnline ? "#4ade80" : "#f87171";
+    }
+  }
 }
 
 function fetchLiveStatus() {
