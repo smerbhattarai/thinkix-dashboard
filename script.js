@@ -929,6 +929,42 @@ window.addEventListener("load", () => {
 const LIVE_STATUS_URL =
   "https://raw.githubusercontent.com/smerbhattarai/thinkix-dashboard/live-data/status.json";
 
+/* The Monitoring node pushes its timestamp as UTC (e.g.
+   "2026-09-03 13:54:22 UTC") — that's the right way to store it.
+   For display we convert it to Australian Eastern time. We use the
+   Australia/Brisbane zone specifically because it never observes
+   daylight saving, so the label always reads "AEST" (Sydney/
+   Melbourne would flip to "AEDT" for part of the year). */
+
+function formatLiveTimestampAEST(rawTimestamp) {
+  if (!rawTimestamp) {
+    return rawTimestamp;
+  }
+
+  const isoUtc = rawTimestamp.replace(" UTC", "Z").replace(" ", "T");
+  const date = new Date(isoUtc);
+
+  if (isNaN(date.getTime())) {
+    return rawTimestamp;
+  }
+
+  const parts = new Intl.DateTimeFormat("en-AU", {
+    timeZone: "Australia/Brisbane",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    timeZoneName: "short",
+  }).formatToParts(date);
+
+  const get = (type) => parts.find((p) => p.type === type)?.value || "";
+
+  return `${get("year")}-${get("month")}-${get("day")} ${get("hour")}:${get("minute")}:${get("second")} ${get("timeZoneName")}`;
+}
+
 function updateLiveStatus(data) {
   if (alertCountElement && typeof data.recent_alerts_5min === "number") {
     const previous = securityAlerts;
@@ -941,7 +977,8 @@ function updateLiveStatus(data) {
   if (heroBadge && data.last_updated) {
     const anomalyNote =
       data.anomaly_status === "ANOMALY" ? " — ANOMALY DETECTED" : "";
-    heroBadge.textContent = `● LIVE — Monitoring node, ${data.last_updated}${anomalyNote}`;
+    const displayTimestamp = formatLiveTimestampAEST(data.last_updated);
+    heroBadge.textContent = `● LIVE — Monitoring node, ${displayTimestamp}${anomalyNote}`;
   }
 }
 
