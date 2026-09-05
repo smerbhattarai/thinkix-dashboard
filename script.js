@@ -1042,6 +1042,59 @@ if (actuatorToggle) {
 }
 
 /* =========================================================
+   VIRTUAL TEMPERATURE SENSOR (SIMULATED)
+
+   The slider lives on sensor.html; this page only displays
+   whatever value is shared through localStorage, live. Same
+   same-browser-only simulation as the actuator switch above —
+   not a real reading from the physical GNS3 lab.
+========================================================= */
+
+const TEMP_KEY = "thinkixTemperatureValue";
+const TEMP_MIN = 15;
+const TEMP_MAX = 45;
+const TEMP_DEFAULT = 24.0;
+
+const tempReadoutValue = document.getElementById("tempReadoutValue");
+const tempBarFill = document.getElementById("tempBarFill");
+
+function readSharedTemperature() {
+  const raw = parseFloat(localStorage.getItem(TEMP_KEY));
+  return isNaN(raw) ? TEMP_DEFAULT : raw;
+}
+
+function renderTemperatureDisplay(value) {
+  if (tempReadoutValue) {
+    tempReadoutValue.textContent = `${value.toFixed(1)}°C`;
+  }
+
+  if (tempBarFill) {
+    const pct = ((value - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100;
+    tempBarFill.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+  }
+}
+
+if (tempReadoutValue || tempBarFill) {
+  renderTemperatureDisplay(readSharedTemperature());
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === TEMP_KEY) {
+      const value = parseFloat(event.newValue);
+      if (!isNaN(value)) {
+        renderTemperatureDisplay(value);
+      }
+    }
+  });
+
+  /* Fallback poll — picks up the ambient drift sensor.html pushes
+     even in browsers/tabs where the storage event doesn't fire
+     reliably (e.g. this tab was backgrounded). */
+  setInterval(() => {
+    renderTemperatureDisplay(readSharedTemperature());
+  }, 2000);
+}
+
+/* =========================================================
    DEVELOPMENT INFORMATION
 ========================================================= */
 
