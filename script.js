@@ -1014,10 +1014,76 @@ window.addEventListener("load", () => {
    no route to the public internet, by design.
 ========================================================= */
 
+/* Shared keys and elements declared up front — both the actuator
+   switch and the temperature panel below reference each other, so
+   everything needs to exist before either one runs its initial
+   render (a const referenced before its own declaration line throws,
+   even inside a function, if that function runs too early). */
+
 const ACTUATOR_KEY = "thinkixActuatorState";
+const TEMP_KEY = "thinkixTemperatureValue";
+const TEMP_MIN = 15;
+const TEMP_MAX = 45;
+const TEMP_DEFAULT = 24.0;
 
 const actuatorToggle = document.getElementById("actuatorToggle");
 const actuatorStateLabel = document.getElementById("actuatorStateLabel");
+const tempReadoutValue = document.getElementById("tempReadoutValue");
+const tempBarFill = document.getElementById("tempBarFill");
+const tempStatusLabel = document.getElementById("tempStatusLabel");
+
+function isActuatorOn() {
+  return localStorage.getItem(ACTUATOR_KEY) === "on";
+}
+
+function readSharedTemperature() {
+  const raw = parseFloat(localStorage.getItem(TEMP_KEY));
+  return isNaN(raw) ? TEMP_DEFAULT : raw;
+}
+
+/* =========================================================
+   VIRTUAL TEMPERATURE SENSOR (SIMULATED)
+
+   The slider lives on sensor.html; this page only displays
+   whatever value is shared through localStorage, live. Same
+   same-browser-only simulation as the actuator switch below —
+   not a real reading from the physical GNS3 lab. When the
+   actuator switch is OFF, the sensor is treated as disconnected
+   and shows no reading, matching sensor.html's behavior.
+========================================================= */
+
+function renderTemperatureDisplay(value) {
+  const online = isActuatorOn();
+
+  if (tempReadoutValue) {
+    tempReadoutValue.textContent = online
+      ? `${value.toFixed(1)}°C`
+      : "DISCONNECTED";
+    tempReadoutValue.classList.toggle("offline", !online);
+  }
+
+  if (tempStatusLabel) {
+    tempStatusLabel.textContent = online ? "Live Reading" : "Sensor Offline";
+  }
+
+  if (tempBarFill) {
+    const pct = online
+      ? ((value - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100
+      : 0;
+    tempBarFill.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    tempBarFill.classList.toggle("offline", !online);
+  }
+}
+
+/* =========================================================
+   VIRTUAL ACTUATOR SWITCH (SIMULATED)
+
+   Same-browser-only demo: this toggle writes to localStorage,
+   and sensor.html (opened in another tab/window on this same
+   site) reacts to it live via the "storage" event. There is no
+   real connection into the GNS3 lab here — the lab's VLANs have
+   no route to the public internet, by design.
+========================================================= */
 
 function renderActuatorState(isOn) {
   if (actuatorToggle) {
@@ -1029,49 +1095,21 @@ function renderActuatorState(isOn) {
       isOn ? "ON" : "OFF"
     } (Simulated)`;
   }
+
+  /* The temperature sensor is the same physical device as the
+     actuator switch (iot-sensor-vlan10) — when it's off, there is
+     no reading to show, so keep the two panels in sync. */
+  renderTemperatureDisplay(readSharedTemperature());
 }
 
 if (actuatorToggle) {
-  renderActuatorState(localStorage.getItem(ACTUATOR_KEY) === "on");
+  renderActuatorState(isActuatorOn());
 
   actuatorToggle.addEventListener("change", () => {
     const isOn = actuatorToggle.checked;
     localStorage.setItem(ACTUATOR_KEY, isOn ? "on" : "off");
     renderActuatorState(isOn);
   });
-}
-
-/* =========================================================
-   VIRTUAL TEMPERATURE SENSOR (SIMULATED)
-
-   The slider lives on sensor.html; this page only displays
-   whatever value is shared through localStorage, live. Same
-   same-browser-only simulation as the actuator switch above —
-   not a real reading from the physical GNS3 lab.
-========================================================= */
-
-const TEMP_KEY = "thinkixTemperatureValue";
-const TEMP_MIN = 15;
-const TEMP_MAX = 45;
-const TEMP_DEFAULT = 24.0;
-
-const tempReadoutValue = document.getElementById("tempReadoutValue");
-const tempBarFill = document.getElementById("tempBarFill");
-
-function readSharedTemperature() {
-  const raw = parseFloat(localStorage.getItem(TEMP_KEY));
-  return isNaN(raw) ? TEMP_DEFAULT : raw;
-}
-
-function renderTemperatureDisplay(value) {
-  if (tempReadoutValue) {
-    tempReadoutValue.textContent = `${value.toFixed(1)}°C`;
-  }
-
-  if (tempBarFill) {
-    const pct = ((value - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100;
-    tempBarFill.style.width = `${Math.min(100, Math.max(0, pct))}%`;
-  }
 }
 
 if (tempReadoutValue || tempBarFill) {
@@ -1083,6 +1121,10 @@ if (tempReadoutValue || tempBarFill) {
       if (!isNaN(value)) {
         renderTemperatureDisplay(value);
       }
+    }
+
+    if (event.key === ACTUATOR_KEY) {
+      renderActuatorState(event.newValue === "on");
     }
   });
 
