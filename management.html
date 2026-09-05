@@ -489,42 +489,84 @@
       </section>
 
       <!-- =========================
-         VIRTUAL ACTUATOR CONTROL
+         VIRTUAL ACTUATOR + TEMPERATURE SENSOR
     ========================== -->
 
-      <section class="dashboard-panel actuator-panel" id="actuator-control">
-        <div class="panel-header">
-          <div>
-            <p class="section-label">ACTUATOR CONTROL</p>
+      <section class="dashboard-grid">
+        <div class="dashboard-panel actuator-panel" id="actuator-control">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">ACTUATOR CONTROL</p>
 
-            <h2>Virtual Sensor Switch (Simulated)</h2>
+              <h2>Virtual Sensor Switch (Simulated)</h2>
+            </div>
+
+            <a href="sensor.html" target="_blank" rel="noopener" class="live-badge actuator-open-link">
+              ↗ Open Virtual Sensor View
+            </a>
           </div>
 
-          <a href="sensor.html" target="_blank" rel="noopener" class="live-badge actuator-open-link">
-            ↗ Open Virtual Sensor View
-          </a>
+          <p class="actuator-description">
+            Flip the switch below, then open the virtual sensor view (link
+            above) in a second tab or window next to this one — it updates
+            instantly. This demonstrates the operator → actuator control
+            concept from the dashboard down to a device indicator. It's a
+            same-browser simulation shared through local storage, not a live
+            connection into the isolated GNS3 lab — the lab's VLANs have no
+            route to the public internet, by design, same reasoning as the
+            GNS3 Lab Evidence panel above.
+          </p>
+
+          <div class="actuator-control-row">
+            <label class="switch">
+              <input type="checkbox" id="actuatorToggle" />
+              <span class="slider"></span>
+            </label>
+
+            <div>
+              <strong id="actuatorStateLabel">Sensor Indicator: OFF (Simulated)</strong>
+              <small>iot-sensor-vlan10 • simulated actuator, this browser only</small>
+            </div>
+          </div>
         </div>
 
-        <p class="actuator-description">
-          Flip the switch below, then open the virtual sensor view (link
-          above) in a second tab or window next to this one — it updates
-          instantly. This demonstrates the operator → actuator control
-          concept from the dashboard down to a device indicator. It's a
-          same-browser simulation shared through local storage, not a live
-          connection into the isolated GNS3 lab — the lab's VLANs have no
-          route to the public internet, by design, same reasoning as the
-          GNS3 Lab Evidence panel above.
-        </p>
+        <div class="dashboard-panel temperature-panel" id="temperature-sensor">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">SENSOR TELEMETRY</p>
 
-        <div class="actuator-control-row">
-          <label class="switch">
-            <input type="checkbox" id="actuatorToggle" />
-            <span class="slider"></span>
-          </label>
+              <h2>Virtual Temperature Reading (Simulated)</h2>
+            </div>
 
-          <div>
-            <strong id="actuatorStateLabel">Sensor Indicator: OFF (Simulated)</strong>
-            <small>iot-sensor-vlan10 • simulated actuator, this browser only</small>
+            <a href="sensor.html" target="_blank" rel="noopener" class="live-badge actuator-open-link">
+              ↗ Adjust from Sensor View
+            </a>
+          </div>
+
+          <p class="actuator-description">
+            The temperature slider lives on the virtual sensor view (link
+            above) — move it there and this reading updates here instantly,
+            plus it drifts slightly on its own to imitate real sensor noise.
+            Same same-browser local-storage simulation as the switch, not a
+            real reading from the physical GNS3 lab.
+          </p>
+
+          <div class="temperature-readout-row">
+            <div class="temperature-value" id="tempReadoutValue">24.0°C</div>
+
+            <div>
+              <strong>Live Reading</strong>
+              <small>iot-sensor-vlan10 • simulated, this browser only</small>
+            </div>
+          </div>
+
+          <div class="temperature-bar">
+            <div class="temperature-bar-fill" id="tempBarFill"></div>
+          </div>
+
+          <div class="temperature-bar-labels">
+            <span>15°C</span>
+            <span>45°C</span>
           </div>
         </div>
       </section>

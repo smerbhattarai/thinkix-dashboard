@@ -104,6 +104,46 @@
         line-height: 1.6;
         padding: 0 24px;
       }
+
+      .temp-panel {
+        margin-top: 44px;
+        width: min(420px, 86vw);
+
+        padding: 20px 24px;
+
+        border: 1px solid currentColor;
+        border-radius: 14px;
+
+        opacity: 0.85;
+        text-align: center;
+      }
+
+      .temp-panel-label {
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin-bottom: 10px;
+      }
+
+      .temp-readout {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+
+      .temp-panel input[type="range"] {
+        width: 100%;
+        accent-color: #38bdf8;
+      }
+
+      .temp-range-labels {
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        opacity: 0.6;
+      }
     </style>
   </head>
 
@@ -124,6 +164,19 @@
       simulation, not a real signal from the physical GNS3 lab (the lab's
       VLANs have no route to the public internet, by design).
     </p>
+
+    <div class="temp-panel">
+      <p class="temp-panel-label">Temperature Sensor (Simulated)</p>
+
+      <div class="temp-readout" id="tempReadout">24.0°C</div>
+
+      <input type="range" id="tempSlider" min="15" max="45" step="0.5" value="24" />
+
+      <div class="temp-range-labels">
+        <span>15°C</span>
+        <span>45°C</span>
+      </div>
+    </div>
 
     <script>
       const ACTUATOR_KEY = "thinkixActuatorState";
@@ -149,6 +202,72 @@
       setInterval(() => {
         applyState(localStorage.getItem(ACTUATOR_KEY) === "on");
       }, 1000);
+
+      /* =====================================================
+         VIRTUAL TEMPERATURE SENSOR (SIMULATED)
+
+         The slider here is the "cause" — move it and the
+         Management Dashboard's temperature panel updates live
+         in another tab via localStorage. A gentle random drift
+         also runs on its own every few seconds so the reading
+         doesn't sit perfectly frozen between manual adjustments,
+         imitating real sensor noise. This is a same-browser
+         simulation only, not a real GNS3 lab reading.
+      ===================================================== */
+
+      const TEMP_KEY = "thinkixTemperatureValue";
+      const TEMP_MIN = 15;
+      const TEMP_MAX = 45;
+      const TEMP_DEFAULT = 24.0;
+
+      const tempSlider = document.getElementById("tempSlider");
+      const tempReadout = document.getElementById("tempReadout");
+
+      function clampTemp(value) {
+        return Math.min(TEMP_MAX, Math.max(TEMP_MIN, value));
+      }
+
+      function readSharedTemp() {
+        const raw = parseFloat(localStorage.getItem(TEMP_KEY));
+        return isNaN(raw) ? TEMP_DEFAULT : raw;
+      }
+
+      function renderTemp(value) {
+        if (tempSlider) {
+          tempSlider.value = value;
+        }
+
+        if (tempReadout) {
+          tempReadout.textContent = `${value.toFixed(1)}°C`;
+        }
+      }
+
+      let currentTemp = readSharedTemp();
+      renderTemp(currentTemp);
+
+      if (tempSlider) {
+        tempSlider.addEventListener("input", () => {
+          currentTemp = parseFloat(tempSlider.value);
+          localStorage.setItem(TEMP_KEY, currentTemp.toFixed(1));
+          renderTemp(currentTemp);
+        });
+      }
+
+      window.addEventListener("storage", (event) => {
+        if (event.key === TEMP_KEY) {
+          const value = parseFloat(event.newValue);
+          if (!isNaN(value)) {
+            currentTemp = value;
+            renderTemp(value);
+          }
+        }
+      });
+
+      setInterval(() => {
+        currentTemp = clampTemp(currentTemp + (Math.random() - 0.5) * 0.4);
+        localStorage.setItem(TEMP_KEY, currentTemp.toFixed(1));
+        renderTemp(currentTemp);
+      }, 3000);
     </script>
   </body>
 </html>
