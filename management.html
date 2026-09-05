@@ -209,15 +209,18 @@
           </div>
 
           <div class="device-list">
-            <div class="device-row">
-              <span class="device-status online"></span>
+            <div class="device-row" id="sensorLiveDeviceRow">
+              <span class="device-status online" id="sensorLiveDot"></span>
 
               <div class="device-info">
                 <strong>iot-sensor-vlan10</strong>
                 <small>10.10.10.12 • VLAN 10 • mTLS verified</small>
+                <small id="sensorLiveSubline" style="color:#4ade80; margin-top:4px;">
+                  ● Live-checked from Monitoring node
+                </small>
               </div>
 
-              <span class="status-label online-text"> ONLINE </span>
+              <span class="status-label online-text" id="sensorLiveStatusLabel"> ONLINE </span>
             </div>
 
             <div class="device-row">
