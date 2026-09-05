@@ -116,6 +116,12 @@
 
         opacity: 0.85;
         text-align: center;
+
+        transition: opacity 0.3s ease;
+      }
+
+      .temp-panel.disconnected {
+        opacity: 0.45;
       }
 
       .temp-panel-label {
@@ -130,11 +136,22 @@
         font-size: 32px;
         font-weight: 800;
         margin-bottom: 14px;
+        transition: font-size 0.2s ease;
+      }
+
+      .temp-panel.disconnected .temp-readout {
+        font-size: 20px;
+        letter-spacing: 0.5px;
       }
 
       .temp-panel input[type="range"] {
         width: 100%;
         accent-color: #38bdf8;
+      }
+
+      .temp-panel input[type="range"]:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
       }
 
       .temp-range-labels {
@@ -165,7 +182,7 @@
       VLANs have no route to the public internet, by design).
     </p>
 
-    <div class="temp-panel">
+    <div class="temp-panel" id="tempPanel">
       <p class="temp-panel-label">Temperature Sensor (Simulated)</p>
 
       <div class="temp-readout" id="tempReadout">24.0°C</div>
@@ -179,49 +196,26 @@
     </div>
 
     <script>
-      const ACTUATOR_KEY = "thinkixActuatorState";
-
-      const body = document.getElementById("sensorBody");
-      const stateText = document.getElementById("sensorStateText");
-
-      function applyState(isOn) {
-        body.classList.toggle("on", isOn);
-        stateText.textContent = isOn ? "ON" : "OFF";
-      }
-
-      applyState(localStorage.getItem(ACTUATOR_KEY) === "on");
-
-      window.addEventListener("storage", (event) => {
-        if (event.key === ACTUATOR_KEY) {
-          applyState(event.newValue === "on");
-        }
-      });
-
-      /* Fallback poll — harmless if the storage event already fired;
-         covers setups where cross-tab storage events don't propagate. */
-      setInterval(() => {
-        applyState(localStorage.getItem(ACTUATOR_KEY) === "on");
-      }, 1000);
-
       /* =====================================================
-         VIRTUAL TEMPERATURE SENSOR (SIMULATED)
-
-         The slider here is the "cause" — move it and the
-         Management Dashboard's temperature panel updates live
-         in another tab via localStorage. A gentle random drift
-         also runs on its own every few seconds so the reading
-         doesn't sit perfectly frozen between manual adjustments,
-         imitating real sensor noise. This is a same-browser
-         simulation only, not a real GNS3 lab reading.
+         Shared state keys — same keys management.html reads,
+         same-browser-only simulation, not a real GNS3 connection.
       ===================================================== */
 
+      const ACTUATOR_KEY = "thinkixActuatorState";
       const TEMP_KEY = "thinkixTemperatureValue";
       const TEMP_MIN = 15;
       const TEMP_MAX = 45;
       const TEMP_DEFAULT = 24.0;
 
+      const body = document.getElementById("sensorBody");
+      const stateText = document.getElementById("sensorStateText");
+      const tempPanel = document.getElementById("tempPanel");
       const tempSlider = document.getElementById("tempSlider");
       const tempReadout = document.getElementById("tempReadout");
+
+      function isActuatorOn() {
+        return localStorage.getItem(ACTUATOR_KEY) === "on";
+      }
 
       function clampTemp(value) {
         return Math.min(TEMP_MAX, Math.max(TEMP_MIN, value));
@@ -232,28 +226,44 @@
         return isNaN(raw) ? TEMP_DEFAULT : raw;
       }
 
+      let currentTemp = readSharedTemp();
+
+      /* The temperature reading and the ON/OFF indicator represent
+         the same physical device (iot-sensor-vlan10) — when it's
+         off, there is no reading, so the slider disables and the
+         readout shows "DISCONNECTED" instead of a stale number. */
       function renderTemp(value) {
+        const online = isActuatorOn();
+
         if (tempSlider) {
           tempSlider.value = value;
+          tempSlider.disabled = !online;
         }
 
         if (tempReadout) {
-          tempReadout.textContent = `${value.toFixed(1)}°C`;
+          tempReadout.textContent = online
+            ? `${value.toFixed(1)}°C`
+            : "DISCONNECTED";
+        }
+
+        if (tempPanel) {
+          tempPanel.classList.toggle("disconnected", !online);
         }
       }
 
-      let currentTemp = readSharedTemp();
-      renderTemp(currentTemp);
-
-      if (tempSlider) {
-        tempSlider.addEventListener("input", () => {
-          currentTemp = parseFloat(tempSlider.value);
-          localStorage.setItem(TEMP_KEY, currentTemp.toFixed(1));
-          renderTemp(currentTemp);
-        });
+      function applyState(isOn) {
+        body.classList.toggle("on", isOn);
+        stateText.textContent = isOn ? "ON" : "OFF";
+        renderTemp(currentTemp);
       }
 
+      applyState(isActuatorOn());
+
       window.addEventListener("storage", (event) => {
+        if (event.key === ACTUATOR_KEY) {
+          applyState(event.newValue === "on");
+        }
+
         if (event.key === TEMP_KEY) {
           const value = parseFloat(event.newValue);
           if (!isNaN(value)) {
@@ -263,7 +273,32 @@
         }
       });
 
+      /* Fallback poll — harmless if the storage event already fired;
+         covers setups where cross-tab storage events don't propagate. */
       setInterval(() => {
+        applyState(isActuatorOn());
+      }, 1000);
+
+      if (tempSlider) {
+        tempSlider.addEventListener("input", () => {
+          if (tempSlider.disabled) {
+            return;
+          }
+
+          currentTemp = parseFloat(tempSlider.value);
+          localStorage.setItem(TEMP_KEY, currentTemp.toFixed(1));
+          renderTemp(currentTemp);
+        });
+      }
+
+      /* Gentle ambient drift, simulating real sensor noise — only
+         while the sensor is actually "on"; a disconnected sensor
+         doesn't keep producing new readings. */
+      setInterval(() => {
+        if (!isActuatorOn()) {
+          return;
+        }
+
         currentTemp = clampTemp(currentTemp + (Math.random() - 0.5) * 0.4);
         localStorage.setItem(TEMP_KEY, currentTemp.toFixed(1));
         renderTemp(currentTemp);
