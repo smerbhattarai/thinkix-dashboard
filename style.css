@@ -1731,6 +1731,104 @@ html {
   color: #38bdf8;
 }
 
+/* VIRTUAL ACTUATOR CONTROL PANEL */
+
+.actuator-panel {
+  margin-top: 22px;
+}
+
+.actuator-open-link {
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+
+.actuator-description {
+  margin-top: 14px;
+  color: #8ba2b8;
+  font-size: 12.5px;
+  line-height: 1.65;
+  max-width: 780px;
+}
+
+.actuator-control-row {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 16px 18px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(8, 22, 39, 0.5);
+}
+
+.actuator-control-row strong {
+  display: block;
+  color: white;
+  font-size: 14px;
+}
+
+.actuator-control-row small {
+  display: block;
+  margin-top: 3px;
+  color: #7f97ad;
+  font-size: 11px;
+}
+
+/* TOGGLE SWITCH */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+
+  transition: 0.25s;
+}
+
+.switch .slider::before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+
+  background: #cbd5e1;
+  border-radius: 50%;
+
+  transition: 0.25s;
+}
+
+.switch input:checked + .slider {
+  background: rgba(34, 197, 94, 0.35);
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+  background: #4ade80;
+}
+
 /* REGISTRATION CARD INSIDE DASHBOARD */
 
 .dashboard-registration {
