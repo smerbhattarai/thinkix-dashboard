@@ -353,7 +353,8 @@ body.dash2 {
 }
 
 .dash2-page {
-  max-width: 1360px;
+  max-width: 1800px;
+  margin: 0 auto;
   padding: 28px 4% 70px;
   display: flex;
   flex-direction: column;
