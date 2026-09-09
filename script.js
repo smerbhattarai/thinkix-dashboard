@@ -1006,8 +1006,8 @@ function updateLiveStatus(data) {
 
     if (sensorSubline) {
       sensorSubline.textContent = isOnline
-        ? "● Live-checked from Monitoring node"
-        : "● Live-checked from Monitoring node — no reply";
+        ? "Live-checked from Monitoring node"
+        : "Live-checked from Monitoring node — no reply";
       sensorSubline.style.color = isOnline ? "#4ade80" : "#f87171";
     }
   }

@@ -2101,3 +2101,399 @@ html {
     padding: 18px;
   }
 }
+
+/* =========================================================
+   MANAGEMENT DASHBOARD — COMPACT, SINGLE-VIEWPORT LAYOUT
+   Scoped to body.mgmt-page only (management.html). No other
+   page uses these classes in this way, so nothing else is
+   affected.
+========================================================= */
+
+body.mgmt-page {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+body.mgmt-page .dashboard-header {
+  flex: 0 0 auto;
+  padding: 12px 3%;
+}
+
+body.mgmt-page .dashboard-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 14px 2.5% 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+body.mgmt-page .dashboard-title {
+  flex: 0 0 auto;
+  margin-bottom: 10px;
+}
+
+body.mgmt-page .dashboard-title h1 {
+  margin-top: 2px;
+  font-size: clamp(20px, 2.2vw, 26px);
+}
+
+body.mgmt-page .dashboard-stats {
+  flex: 0 0 auto;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+body.mgmt-page .dashboard-stat-card {
+  padding: 12px 14px;
+  gap: 10px;
+}
+
+body.mgmt-page .stat-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  border-radius: 9px;
+}
+
+body.mgmt-page .dashboard-stat-card p {
+  font-size: 10.5px;
+}
+
+body.mgmt-page .dashboard-stat-card h2 {
+  margin-top: 2px;
+  font-size: 19px;
+}
+
+body.mgmt-page .mgmt-panels {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+}
+
+body.mgmt-page .mgmt-panels .dashboard-panel {
+  min-height: 0;
+  padding: 12px 14px;
+  border-radius: 13px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+body.mgmt-page .mgmt-panels .panel-header {
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+body.mgmt-page .mgmt-panels .section-label {
+  font-size: 8.5px;
+}
+
+body.mgmt-page .mgmt-panels .panel-header h2 {
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+body.mgmt-page .mgmt-panels .live-badge,
+body.mgmt-page .mgmt-panels .warning-badge {
+  font-size: 8px;
+  padding: 5px 7px;
+  white-space: nowrap;
+}
+
+/* traffic panel */
+
+body.mgmt-page .traffic-summary {
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+body.mgmt-page .traffic-summary > div {
+  padding: 8px;
+}
+
+body.mgmt-page .traffic-summary small {
+  margin-bottom: 3px;
+  font-size: 9px;
+}
+
+body.mgmt-page .traffic-summary strong {
+  font-size: 14px;
+}
+
+body.mgmt-page .mgmt-panels .chart-labels {
+  margin-top: auto;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 8.5px;
+}
+
+/* device list */
+
+body.mgmt-page .device-list {
+  gap: 4px;
+  overflow: hidden;
+}
+
+body.mgmt-page .device-row {
+  padding: 6px 10px;
+  gap: 8px;
+}
+
+body.mgmt-page .device-info strong {
+  font-size: 12.5px;
+}
+
+body.mgmt-page .device-info small {
+  margin-top: 1px;
+  font-size: 9.5px;
+}
+
+body.mgmt-page .status-label {
+  font-size: 9px;
+}
+
+body.mgmt-page .mgmt-panels .panel-header {
+  margin-bottom: 6px;
+}
+
+/* alerts */
+
+body.mgmt-page .alert-list {
+  gap: 6px;
+  overflow: hidden;
+}
+
+body.mgmt-page .security-alert {
+  grid-template-columns: 26px 1fr;
+  gap: 8px;
+  padding: 8px 10px;
+}
+
+body.mgmt-page .alert-symbol {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+body.mgmt-page .security-alert strong {
+  font-size: 11.5px;
+}
+
+body.mgmt-page .security-alert p {
+  margin-top: 3px;
+  font-size: 10.5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.mgmt-page .security-alert small {
+  margin-top: 3px;
+  font-size: 9px;
+}
+
+/* interfaces: 2-column mini grid */
+
+body.mgmt-page .interface-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+body.mgmt-page .interface-row {
+  padding: 3px 9px;
+}
+
+body.mgmt-page .interface-row strong {
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+body.mgmt-page .interface-row small {
+  margin-top: 1px;
+  font-size: 8.5px;
+  line-height: 1.2;
+}
+
+@media (min-width: 1320px) {
+  body.mgmt-page .interface-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 8px;
+  }
+}
+
+body.mgmt-page .interface-up,
+body.mgmt-page .interface-monitoring {
+  font-size: 9px;
+}
+
+/* gns3 */
+
+body.mgmt-page .gns3-message {
+  gap: 10px;
+  padding: 10px;
+}
+
+body.mgmt-page .gns3-icon {
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+  border-radius: 9px;
+}
+
+body.mgmt-page .gns3-message h3 {
+  font-size: 12px;
+}
+
+body.mgmt-page .gns3-message p {
+  margin-top: 3px;
+  font-size: 10.5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.mgmt-page .gns3-nodes {
+  margin-top: 8px;
+  gap: 5px;
+  overflow: hidden;
+}
+
+body.mgmt-page .gns3-nodes span {
+  padding: 4px 8px;
+  font-size: 9px;
+}
+
+/* event log */
+
+body.mgmt-page .email-history {
+  gap: 6px;
+  overflow: hidden;
+}
+
+body.mgmt-page .email-row {
+  grid-template-columns: 26px 1fr auto;
+  gap: 8px;
+  padding: 7px 9px;
+}
+
+body.mgmt-page .email-icon-small {
+  width: 26px;
+  height: 26px;
+}
+
+body.mgmt-page .email-row strong {
+  font-size: 11px;
+}
+
+body.mgmt-page .email-row p {
+  font-size: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.mgmt-page .email-row small {
+  font-size: 9px;
+}
+
+/* actuator + temperature */
+
+body.mgmt-page .actuator-description {
+  margin-top: 6px;
+  font-size: 10.5px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.mgmt-page .actuator-control-row,
+body.mgmt-page .temperature-readout-row {
+  margin-top: 8px;
+  padding: 8px 10px;
+  gap: 10px;
+}
+
+body.mgmt-page .actuator-control-row strong,
+body.mgmt-page .temperature-readout-row strong {
+  font-size: 12px;
+}
+
+body.mgmt-page .actuator-control-row small,
+body.mgmt-page .temperature-readout-row small {
+  font-size: 9.5px;
+}
+
+body.mgmt-page .temperature-value {
+  min-width: 80px;
+  font-size: 24px;
+}
+
+body.mgmt-page .temperature-bar {
+  margin-top: 6px;
+}
+
+body.mgmt-page .temperature-bar-labels {
+  margin-top: 4px;
+  font-size: 9.5px;
+}
+
+body.mgmt-page .temperature-value {
+  font-size: 22px;
+}
+
+/* toggle switches always sit on the right of their row */
+
+.actuator-control-row {
+  justify-content: space-between;
+}
+
+.toggle-row {
+  justify-content: space-between;
+}
+
+.toggle-row .toggle {
+  order: 1;
+}
+
+@media (max-width: 1250px) {
+  body.mgmt-page .mgmt-panels {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  body.mgmt-page {
+    height: auto;
+    overflow: visible;
+  }
+
+  body.mgmt-page .dashboard-container {
+    overflow: visible;
+  }
+
+  body.mgmt-page .mgmt-panels {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    overflow: visible;
+  }
+
+  body.mgmt-page .mgmt-panels .dashboard-panel {
+    overflow: visible;
+  }
+}
