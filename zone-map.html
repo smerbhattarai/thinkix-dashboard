@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>ThinkiX | Dashboard</title>
+    <title>ThinkiX | Zone Map</title>
 
     <link rel="stylesheet" href="dashboard.css" />
     <style>
@@ -30,7 +30,7 @@
         </div>
 
         <nav class="dash2-sidenav">
-          <div class="dash2-sidenav-group"><span>Overview</span><a href="management.html" class="active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="2.5" width="6" height="6" rx="1.5"/><rect x="11.5" y="2.5" width="6" height="6" rx="1.5"/><rect x="2.5" y="11.5" width="6" height="6" rx="1.5"/><rect x="11.5" y="11.5" width="6" height="6" rx="1.5"/></svg><span>Dashboard</span></a></div><div class="dash2-sidenav-group"><span>Network & Security</span><a href="zone-map.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="2.3"/><circle cx="3" cy="3" r="1.6"/><circle cx="17" cy="3" r="1.6"/><circle cx="3" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/><line x1="8.3" y1="8.3" x2="4.2" y2="4.2"/><line x1="11.7" y1="8.3" x2="15.8" y2="4.2"/><line x1="8.3" y1="11.7" x2="4.2" y2="15.8"/><line x1="11.7" y1="11.7" x2="15.8" y2="15.8"/></svg><span>Zone Map</span></a><a href="alerts.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M10 3 L18 17 L2 17 Z"/><line x1="10" y1="8" x2="10" y2="11.5"/><circle cx="10" cy="14" r="0.9" fill="currentColor" stroke="none"/></svg><span>Security Alerts</span></a><a href="interfaces.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v4M13 2v4M5 6h10v3a5 5 0 0 1-10 0V6z"/><path d="M10 14v4"/></svg><span>Interfaces</span></a><a href="evidence.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M10 2l7 3v5c0 4.5-3 7.5-7 8-4-.5-7-3.5-7-8V5l7-3z"/><path d="M7 10l2 2 4-4.5"/></svg><span>Evidence</span></a><a href="event-log.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="12" height="15" rx="1.5"/><line x1="7" y1="7.5" x2="13" y2="7.5"/><line x1="7" y1="11" x2="13" y2="11"/><line x1="7" y1="14.5" x2="10.5" y2="14.5"/></svg><span>Event Log</span></a></div><div class="dash2-sidenav-group"><span>Simulation</span><a href="simulation.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="4" y1="17" x2="4" y2="3"/><line x1="10" y1="17" x2="10" y2="3"/><line x1="16" y1="17" x2="16" y2="3"/><circle cx="4" cy="7" r="1.8" fill="currentColor" stroke="none"/><circle cx="10" cy="13" r="1.8" fill="currentColor" stroke="none"/><circle cx="16" cy="9" r="1.8" fill="currentColor" stroke="none"/></svg><span>Live Simulation</span></a></div><div class="dash2-sidenav-group"><span>Device Management</span><a href="register.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="3"/><path d="M2.5 17c.5-3.5 3-5.5 5.5-5.5s5 2 5.5 5.5"/><line x1="15.5" y1="5" x2="15.5" y2="10"/><line x1="13" y1="7.5" x2="18" y2="7.5"/></svg><span>Register Device</span></a><a href="device-status.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,10 6,10 8,4 12,16 14,10 18,10"/></svg><span>Device Status</span></a><a href="history.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="11" r="7"/><polyline points="10,7 10,11 13,13"/><path d="M6 2.5 L3 4.5"/></svg><span>History</span></a></div>
+          <div class="dash2-sidenav-group"><span>Overview</span><a href="management.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="2.5" width="6" height="6" rx="1.5"/><rect x="11.5" y="2.5" width="6" height="6" rx="1.5"/><rect x="2.5" y="11.5" width="6" height="6" rx="1.5"/><rect x="11.5" y="11.5" width="6" height="6" rx="1.5"/></svg><span>Dashboard</span></a></div><div class="dash2-sidenav-group"><span>Network & Security</span><a href="zone-map.html" class="active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="2.3"/><circle cx="3" cy="3" r="1.6"/><circle cx="17" cy="3" r="1.6"/><circle cx="3" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/><line x1="8.3" y1="8.3" x2="4.2" y2="4.2"/><line x1="11.7" y1="8.3" x2="15.8" y2="4.2"/><line x1="8.3" y1="11.7" x2="4.2" y2="15.8"/><line x1="11.7" y1="11.7" x2="15.8" y2="15.8"/></svg><span>Zone Map</span></a><a href="alerts.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M10 3 L18 17 L2 17 Z"/><line x1="10" y1="8" x2="10" y2="11.5"/><circle cx="10" cy="14" r="0.9" fill="currentColor" stroke="none"/></svg><span>Security Alerts</span></a><a href="interfaces.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v4M13 2v4M5 6h10v3a5 5 0 0 1-10 0V6z"/><path d="M10 14v4"/></svg><span>Interfaces</span></a><a href="evidence.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M10 2l7 3v5c0 4.5-3 7.5-7 8-4-.5-7-3.5-7-8V5l7-3z"/><path d="M7 10l2 2 4-4.5"/></svg><span>Evidence</span></a><a href="event-log.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="12" height="15" rx="1.5"/><line x1="7" y1="7.5" x2="13" y2="7.5"/><line x1="7" y1="11" x2="13" y2="11"/><line x1="7" y1="14.5" x2="10.5" y2="14.5"/></svg><span>Event Log</span></a></div><div class="dash2-sidenav-group"><span>Simulation</span><a href="simulation.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="4" y1="17" x2="4" y2="3"/><line x1="10" y1="17" x2="10" y2="3"/><line x1="16" y1="17" x2="16" y2="3"/><circle cx="4" cy="7" r="1.8" fill="currentColor" stroke="none"/><circle cx="10" cy="13" r="1.8" fill="currentColor" stroke="none"/><circle cx="16" cy="9" r="1.8" fill="currentColor" stroke="none"/></svg><span>Live Simulation</span></a></div><div class="dash2-sidenav-group"><span>Device Management</span><a href="register.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="3"/><path d="M2.5 17c.5-3.5 3-5.5 5.5-5.5s5 2 5.5 5.5"/><line x1="15.5" y1="5" x2="15.5" y2="10"/><line x1="13" y1="7.5" x2="18" y2="7.5"/></svg><span>Register Device</span></a><a href="device-status.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,10 6,10 8,4 12,16 14,10 18,10"/></svg><span>Device Status</span></a><a href="history.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="11" r="7"/><polyline points="10,7 10,11 13,13"/><path d="M6 2.5 L3 4.5"/></svg><span>History</span></a></div>
         </nav>
 
         <div class="dash2-sidebar-foot">
@@ -44,98 +44,131 @@
         
         <header class="dash2-topbar">
           <div>
-            <p class="dash2-eyebrow">&#9679; Industrial IoT Security &mdash; ThinkiX Manufacturing</p>
-            <h1>Dashboard</h1>
-            <p>Every device connected across the five segmented VLANs, live-verified against the project evidence log.</p>
+            <p class="dash2-eyebrow">Network Architecture</p>
+            <h1>Network Zone Map</h1>
+            <p>The IEC 62443 zone &amp; conduit model this project implements &mdash; five VLANs, one deny-by-default firewall.</p>
           </div>
-          <div class="dash2-topbar-right"><span class="live-badge">&#9679; LAST VERIFIED 2 SEP 2026</span></div>
+          <div class="dash2-topbar-right"><span class="dash2-chip dash2-chip--ok">&#9679; LAST VERIFIED 2 SEP 2026</span></div>
         </header>
 
 
         <main class="dash2-page">
 
-          <section class="dash2-stat-row">
-            <a href="#connected-devices" class="dashboard-stat-card">
-              <div class="dash2-stat-icon">&#9673;</div>
-              <div>
-                <p>Connected Devices</p>
-                <h2 id="totalDevices">4</h2>
-              </div>
-            </a>
-
-            <a href="#connected-devices" class="dashboard-stat-card">
-              <div class="dash2-stat-icon ok">&#9679;</div>
-              <div>
-                <p>Online Devices</p>
-                <h2 id="onlineDevices">3</h2>
-              </div>
-            </a>
-
-            <a href="alerts.html" class="dashboard-stat-card">
-              <div class="dash2-stat-icon warn">&#9888;</div>
-              <div>
-                <p>Security Alerts</p>
-                <h2 id="alertCount">2</h2>
-              </div>
-            </a>
-
-            <a href="event-log.html" class="dashboard-stat-card">
-              <div class="dash2-stat-icon info">&#9776;</div>
-              <div>
-                <p>Event Log Entries</p>
-                <h2>3</h2>
-              </div>
-            </a>
-          </section>
-
-          <section class="dash2-panel" id="connected-devices">
+          <section class="dash2-panel" id="zone-map">
             <div class="dash2-panel-head">
               <div>
-                <h2>Connected Devices</h2>
-                <p>Live-verified against the GNS3 lab evidence pass &middot; 2 Sep 2026</p>
+                <h2>Network Zone Map</h2>
+                <p>IEC 62443-style zone &amp; conduit segmentation, enforced by pfSense</p>
               </div>
-              <a href="zone-map.html" class="dash2-chip">View zone map &rarr;</a>
+              <span class="dash2-chip">5 zones &middot; deny-by-default</span>
             </div>
 
-            <div class="device-list">
-              <div class="device-row" id="sensorLiveDeviceRow">
-                <span class="device-status online" id="sensorLiveDot"></span>
-                <div class="device-info">
-                  <strong>iot-sensor-vlan10</strong>
-                  <small>10.10.10.12 &bull; mTLS verified</small>
-                  <span class="device-zone-tag" style="--zc:#34d399" id="sensorLiveSubline">Live-checked from Monitoring node</span>
+            <div class="zm-hub">
+              <div class="zm-hub-core">
+                <div class="zm-hub-icon">&#129521;</div>
+                <div>
+                  <strong>pfSense &mdash; Zone &amp; Conduit Firewall</strong>
+                  <small>Every inter-zone packet is inspected and explicitly allowed</small>
                 </div>
-                <span class="status-label online-text" id="sensorLiveStatusLabel">ONLINE</span>
+              </div>
+            </div>
+
+            <p class="zm-conduit-label">&#9662; nothing crosses a zone boundary unless a rule below explicitly allows it &#9662;</p>
+
+            <div class="zm-zones">
+              <div class="zm-zone" style="--zc:#34d399">
+                <span class="zm-zone-vlan">VLAN 10</span>
+                <h3>IoT Sensors</h3>
+                <p>Field sensors, mTLS to the broker only.</p>
+                <div class="zm-zone-foot">
+                  <span>1 device</span>
+                  <span class="zm-status zm-status--ok">ONLINE</span>
+                </div>
               </div>
 
-              <div class="device-row">
-                <span class="device-status offline"></span>
-                <div class="device-info">
-                  <strong>plc1-robotics</strong>
-                  <small>Cert serial 1000 &bull; CRL revoked</small>
-                  <span class="device-zone-tag" style="--zc:#fb923c">VLAN 20 &mdash; Robotics / PLC</span>
+              <div class="zm-zone" style="--zc:#fb923c">
+                <span class="zm-zone-vlan">VLAN 20</span>
+                <h3>Robotics / PLC</h3>
+                <p>Controllers with certificate-based access control.</p>
+                <div class="zm-zone-foot">
+                  <span>1 device</span>
+                  <span class="zm-status zm-status--warn">CRL REVOKED</span>
                 </div>
-                <span class="status-label offline-text">REVOKED</span>
               </div>
 
-              <div class="device-row">
-                <span class="device-status online"></span>
-                <div class="device-info">
-                  <strong>Mosquitto-Broker</strong>
-                  <small>10.10.30.11 &bull; Port 8883 (TLS 1.3)</small>
-                  <span class="device-zone-tag" style="--zc:#38bdf8">VLAN 30 &mdash; Broker / Firewall</span>
+              <div class="zm-zone" style="--zc:#38bdf8">
+                <span class="zm-zone-vlan">VLAN 30</span>
+                <h3>Broker / Firewall</h3>
+                <p>Mosquitto MQTT broker, TLS 1.3 + mutual auth.</p>
+                <div class="zm-zone-foot">
+                  <span>1 device</span>
+                  <span class="zm-status zm-status--ok">ACTIVE</span>
                 </div>
-                <span class="status-label online-text">ACTIVE</span>
               </div>
 
-              <div class="device-row">
-                <span class="device-status online"></span>
-                <div class="device-info">
-                  <strong>Suricata-IDS</strong>
-                  <small>10.10.40.11 &bull; 2 signatures live</small>
-                  <span class="device-zone-tag" style="--zc:#a78bfa">VLAN 40 &mdash; Monitoring</span>
+              <div class="zm-zone" style="--zc:#a78bfa">
+                <span class="zm-zone-vlan">VLAN 40</span>
+                <h3>Monitoring</h3>
+                <p>Suricata IDS with automated quarantine response.</p>
+                <div class="zm-zone-foot">
+                  <span>1 device</span>
+                  <span class="zm-status zm-status--info">MONITORING</span>
                 </div>
-                <span class="status-label online-text">MONITORING</span>
+              </div>
+
+              <div class="zm-zone" style="--zc:#f472b6">
+                <span class="zm-zone-vlan">VLAN 50</span>
+                <h3>Management</h3>
+                <p>Admin access to this dashboard &mdash; restricted zone.</p>
+                <div class="zm-zone-foot">
+                  <span>Restricted</span>
+                  <span class="zm-status zm-status--ok">SECURE</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dash2-rules">
+              <div class="dash2-rules-row head">
+                <span>Source zone</span>
+                <span>Destination zone</span>
+                <span>Protocol / port</span>
+                <span>Purpose</span>
+                <span>Rule</span>
+              </div>
+              <div class="dash2-rules-row">
+                <span class="mono">VLAN 10 &mdash; Sensors</span>
+                <span class="mono">VLAN 30 &mdash; Broker</span>
+                <span class="mono">TCP/8883 (MQTT+TLS)</span>
+                <span>Sensor telemetry publish</span>
+                <span class="dash2-rule-pill allow">ALLOW</span>
+              </div>
+              <div class="dash2-rules-row">
+                <span class="mono">VLAN 40 &mdash; Monitoring</span>
+                <span class="mono">VLAN 10 &mdash; Sensors</span>
+                <span class="mono">ICMP</span>
+                <span>Live reachability check</span>
+                <span class="dash2-rule-pill allow">ALLOW</span>
+              </div>
+              <div class="dash2-rules-row">
+                <span class="mono">VLAN 40 &mdash; Monitoring</span>
+                <span class="mono">pfSense (local)</span>
+                <span class="mono">syslog (local0)</span>
+                <span>Automated quarantine trigger</span>
+                <span class="dash2-rule-pill allow">ALLOW</span>
+              </div>
+              <div class="dash2-rules-row">
+                <span class="mono">Any zone</span>
+                <span class="mono">Any zone</span>
+                <span class="mono">any</span>
+                <span>Everything not explicitly listed above</span>
+                <span class="dash2-rule-pill deny">DENY</span>
+              </div>
+              <div class="dash2-rules-row">
+                <span class="mono">Any zone</span>
+                <span class="mono">WAN / Internet</span>
+                <span class="mono">any</span>
+                <span>Lab isolation &mdash; no public route</span>
+                <span class="dash2-rule-pill deny">DENY</span>
               </div>
             </div>
           </section>

@@ -389,13 +389,30 @@ function createRegisteredDeviceRow(device) {
     deviceRow.dataset.registrationId = device.registrationId;
   }
 
+  /* A device only shows as (simulated) online once device-status.html
+     has run its simulated GNS3 confirmation for it. Until then it stays
+     the original honest "registered but unverified" yellow state. */
+
+  const isSimulatedOnline = device.gns3Status === "Confirmed (Simulated)";
+
+  const dotColor = isSimulatedOnline ? "#4ade80" : "#facc15";
+  const dotGlow = isSimulatedOnline
+    ? "rgba(74,222,128,.7)"
+    : "rgba(250,204,21,.7)";
+  const subLineColor = isSimulatedOnline ? "#4ade80" : "#facc15";
+  const subLineText = isSimulatedOnline
+    ? "GNS3 Verified (Simulated)"
+    : "GNS3 Pending";
+  const badgeColor = isSimulatedOnline ? "#4ade80" : "#fde047";
+  const badgeText = isSimulatedOnline ? "ONLINE (SIMULATED)" : "REGISTERED";
+
   deviceRow.innerHTML = `
 
     <span
       class="device-status"
       style="
-        background:#facc15;
-        box-shadow:0 0 10px rgba(250,204,21,.7);
+        background:${dotColor};
+        box-shadow:0 0 10px ${dotGlow};
       "
     ></span>
 
@@ -413,21 +430,21 @@ function createRegisteredDeviceRow(device) {
 
       <small
         style="
-          color:#facc15;
+          color:${subLineColor};
           margin-top:4px;
         "
       >
         ${formatDeviceType(device.deviceType)}
-        • GNS3 Pending
+        • ${subLineText}
       </small>
 
     </div>
 
     <span
       class="status-label"
-      style="color:#fde047;"
+      style="color:${badgeColor};"
     >
-      REGISTERED
+      ${badgeText}
     </span>
 
   `;
@@ -477,13 +494,19 @@ function loadRegisteredDevices() {
      Existing lab devices = 4
      Registered devices = history count
 
-     ONLINE DEVICES stays at 3 because registrations
-     are NOT considered live until GNS3 confirms them.
+     ONLINE DEVICES starts at 3 (the real lab devices) and only
+     gains a registered device once device-status.html has run
+     its simulated GNS3 confirmation for it — a plain registration
+     is NOT considered live until that (simulated) confirmation.
   --------------------------------------------------------- */
+
+  const simulatedOnlineCount = history.filter(
+    (device) => device.gns3Status === "Confirmed (Simulated)",
+  ).length;
 
   totalDevices = SIMULATED_LAB_DEVICE_COUNT + registeredDeviceCount;
 
-  onlineDevices = SIMULATED_ONLINE_COUNT;
+  onlineDevices = SIMULATED_ONLINE_COUNT + simulatedOnlineCount;
 
   if (totalDevicesElement) {
     totalDevicesElement.textContent = totalDevices;
@@ -906,6 +929,42 @@ window.addEventListener("load", () => {
 const LIVE_STATUS_URL =
   "https://raw.githubusercontent.com/smerbhattarai/thinkix-dashboard/live-data/status.json";
 
+/* The Monitoring node pushes its timestamp as UTC (e.g.
+   "2026-09-03 13:54:22 UTC") — that's the right way to store it.
+   For display we convert it to Australian Eastern time. We use the
+   Australia/Brisbane zone specifically because it never observes
+   daylight saving, so the label always reads "AEST" (Sydney/
+   Melbourne would flip to "AEDT" for part of the year). */
+
+function formatLiveTimestampAEST(rawTimestamp) {
+  if (!rawTimestamp) {
+    return rawTimestamp;
+  }
+
+  const isoUtc = rawTimestamp.replace(" UTC", "Z").replace(" ", "T");
+  const date = new Date(isoUtc);
+
+  if (isNaN(date.getTime())) {
+    return rawTimestamp;
+  }
+
+  const parts = new Intl.DateTimeFormat("en-AU", {
+    timeZone: "Australia/Brisbane",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    timeZoneName: "short",
+  }).formatToParts(date);
+
+  const get = (type) => parts.find((p) => p.type === type)?.value || "";
+
+  return `${get("year")}-${get("month")}-${get("day")} ${get("hour")}:${get("minute")}:${get("second")} ${get("timeZoneName")}`;
+}
+
 function updateLiveStatus(data) {
   if (alertCountElement && typeof data.recent_alerts_5min === "number") {
     const previous = securityAlerts;
@@ -918,7 +977,39 @@ function updateLiveStatus(data) {
   if (heroBadge && data.last_updated) {
     const anomalyNote =
       data.anomaly_status === "ANOMALY" ? " — ANOMALY DETECTED" : "";
-    heroBadge.textContent = `● LIVE — Monitoring node, ${data.last_updated}${anomalyNote}`;
+    const displayTimestamp = formatLiveTimestampAEST(data.last_updated);
+    heroBadge.textContent = `● LIVE — Monitoring node, ${displayTimestamp}${anomalyNote}`;
+  }
+
+  /* Genuine live reachability check for iot-sensor-vlan10, pushed by
+     github_push.py after the Monitoring node pings the sensor over a
+     dedicated, documented conduit (Monitoring -> VLAN10, ICMP only).
+     This is the ONE device row on this dashboard that reflects the
+     sensor's real current state rather than a one-time test result —
+     every other device row here is evidence from earlier testing, not
+     a live poll. Old payloads without this field simply leave the row
+     showing its last-known state, same fail-silent behavior as the
+     rest of this pipeline. */
+  const sensorDot = document.getElementById("sensorLiveDot");
+  const sensorLabel = document.getElementById("sensorLiveStatusLabel");
+  const sensorSubline = document.getElementById("sensorLiveSubline");
+
+  if (sensorDot && sensorLabel && typeof data.sensor_status === "string") {
+    const isOnline = data.sensor_status === "online";
+
+    sensorDot.classList.toggle("online", isOnline);
+    sensorDot.classList.toggle("offline", !isOnline);
+
+    sensorLabel.textContent = isOnline ? " ONLINE " : " OFFLINE ";
+    sensorLabel.classList.toggle("online-text", isOnline);
+    sensorLabel.classList.toggle("offline-text", !isOnline);
+
+    if (sensorSubline) {
+      sensorSubline.textContent = isOnline
+        ? "Live-checked from Monitoring node"
+        : "Live-checked from Monitoring node — no reply";
+      sensorSubline.style.color = isOnline ? "#4ade80" : "#f87171";
+    }
   }
 }
 
@@ -943,6 +1034,138 @@ window.addEventListener("load", () => {
   fetchLiveStatus();
   setInterval(fetchLiveStatus, 30000);
 });
+
+/* =========================================================
+   VIRTUAL ACTUATOR SWITCH (SIMULATED)
+
+   Same-browser-only demo: this toggle writes to localStorage,
+   and sensor.html (opened in another tab/window on this same
+   site) reacts to it live via the "storage" event. There is no
+   real connection into the GNS3 lab here — the lab's VLANs have
+   no route to the public internet, by design.
+========================================================= */
+
+/* Shared keys and elements declared up front — both the actuator
+   switch and the temperature panel below reference each other, so
+   everything needs to exist before either one runs its initial
+   render (a const referenced before its own declaration line throws,
+   even inside a function, if that function runs too early). */
+
+const ACTUATOR_KEY = "thinkixActuatorState";
+const TEMP_KEY = "thinkixTemperatureValue";
+const TEMP_MIN = 15;
+const TEMP_MAX = 45;
+const TEMP_DEFAULT = 24.0;
+
+const actuatorToggle = document.getElementById("actuatorToggle");
+const actuatorStateLabel = document.getElementById("actuatorStateLabel");
+const tempReadoutValue = document.getElementById("tempReadoutValue");
+const tempBarFill = document.getElementById("tempBarFill");
+const tempStatusLabel = document.getElementById("tempStatusLabel");
+
+function isActuatorOn() {
+  return localStorage.getItem(ACTUATOR_KEY) === "on";
+}
+
+function readSharedTemperature() {
+  const raw = parseFloat(localStorage.getItem(TEMP_KEY));
+  return isNaN(raw) ? TEMP_DEFAULT : raw;
+}
+
+/* =========================================================
+   VIRTUAL TEMPERATURE SENSOR (SIMULATED)
+
+   The slider lives on sensor.html; this page only displays
+   whatever value is shared through localStorage, live. Same
+   same-browser-only simulation as the actuator switch below —
+   not a real reading from the physical GNS3 lab. When the
+   actuator switch is OFF, the sensor is treated as disconnected
+   and shows no reading, matching sensor.html's behavior.
+========================================================= */
+
+function renderTemperatureDisplay(value) {
+  const online = isActuatorOn();
+
+  if (tempReadoutValue) {
+    tempReadoutValue.textContent = online
+      ? `${value.toFixed(1)}°C`
+      : "DISCONNECTED";
+    tempReadoutValue.classList.toggle("offline", !online);
+  }
+
+  if (tempStatusLabel) {
+    tempStatusLabel.textContent = online ? "Live Reading" : "Sensor Offline";
+  }
+
+  if (tempBarFill) {
+    const pct = online
+      ? ((value - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100
+      : 0;
+    tempBarFill.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    tempBarFill.classList.toggle("offline", !online);
+  }
+}
+
+/* =========================================================
+   VIRTUAL ACTUATOR SWITCH (SIMULATED)
+
+   Same-browser-only demo: this toggle writes to localStorage,
+   and sensor.html (opened in another tab/window on this same
+   site) reacts to it live via the "storage" event. There is no
+   real connection into the GNS3 lab here — the lab's VLANs have
+   no route to the public internet, by design.
+========================================================= */
+
+function renderActuatorState(isOn) {
+  if (actuatorToggle) {
+    actuatorToggle.checked = isOn;
+  }
+
+  if (actuatorStateLabel) {
+    actuatorStateLabel.textContent = `Sensor Indicator: ${
+      isOn ? "ON" : "OFF"
+    } (Simulated)`;
+  }
+
+  /* The temperature sensor is the same physical device as the
+     actuator switch (iot-sensor-vlan10) — when it's off, there is
+     no reading to show, so keep the two panels in sync. */
+  renderTemperatureDisplay(readSharedTemperature());
+}
+
+if (actuatorToggle) {
+  renderActuatorState(isActuatorOn());
+
+  actuatorToggle.addEventListener("change", () => {
+    const isOn = actuatorToggle.checked;
+    localStorage.setItem(ACTUATOR_KEY, isOn ? "on" : "off");
+    renderActuatorState(isOn);
+  });
+}
+
+if (tempReadoutValue || tempBarFill) {
+  renderTemperatureDisplay(readSharedTemperature());
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === TEMP_KEY) {
+      const value = parseFloat(event.newValue);
+      if (!isNaN(value)) {
+        renderTemperatureDisplay(value);
+      }
+    }
+
+    if (event.key === ACTUATOR_KEY) {
+      renderActuatorState(event.newValue === "on");
+    }
+  });
+
+  /* Fallback poll — picks up the ambient drift sensor.html pushes
+     even in browsers/tabs where the storage event doesn't fire
+     reliably (e.g. this tab was backgrounded). */
+  setInterval(() => {
+    renderTemperatureDisplay(readSharedTemperature());
+  }, 2000);
+}
 
 /* =========================================================
    DEVELOPMENT INFORMATION

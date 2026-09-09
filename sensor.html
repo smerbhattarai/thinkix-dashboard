@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ThinkiX | Virtual Sensor</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        background: #000;
+        color: #fff;
+
+        transition:
+          background 0.4s ease,
+          color 0.4s ease;
+      }
+
+      body.on {
+        background: #fff;
+        color: #000;
+      }
+
+      .sensor-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 18px 5%;
+
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+
+        opacity: 0.65;
+      }
+
+      .sensor-topbar a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 2px;
+      }
+
+      .sensor-label {
+        font-size: 13px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        opacity: 0.55;
+        margin-bottom: 16px;
+      }
+
+      .sensor-state {
+        font-size: clamp(48px, 10vw, 110px);
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+
+      .sensor-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        margin: 22px auto 0;
+        background: #facc15;
+        box-shadow: 0 0 16px #facc15;
+        transition:
+          background 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      body.on .sensor-dot {
+        background: #22c55e;
+        box-shadow: 0 0 16px #22c55e;
+      }
+
+      .sensor-note {
+        margin-top: 30px;
+        max-width: 480px;
+        text-align: center;
+        font-size: 12px;
+        opacity: 0.55;
+        line-height: 1.6;
+        padding: 0 24px;
+      }
+
+      .temp-panel {
+        margin-top: 44px;
+        width: min(420px, 86vw);
+
+        padding: 20px 24px;
+
+        border: 1px solid currentColor;
+        border-radius: 14px;
+
+        opacity: 0.85;
+        text-align: center;
+
+        transition: opacity 0.3s ease;
+      }
+
+      .temp-panel.disconnected {
+        opacity: 0.45;
+      }
+
+      .temp-panel-label {
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin-bottom: 10px;
+      }
+
+      .temp-readout {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 14px;
+        transition: font-size 0.2s ease;
+      }
+
+      .temp-panel.disconnected .temp-readout {
+        font-size: 20px;
+        letter-spacing: 0.5px;
+      }
+
+      .temp-panel input[type="range"] {
+        width: 100%;
+        accent-color: #38bdf8;
+      }
+
+      .temp-panel input[type="range"]:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .temp-range-labels {
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+
+  <body id="sensorBody">
+    <div class="sensor-topbar">
+      <span>ThinkiX Virtual Sensor — iot-sensor-vlan10 (Simulated)</span>
+      <a href="management.html">← Back to Dashboard</a>
+    </div>
+
+    <p class="sensor-label">Sensor Indicator</p>
+    <div class="sensor-state" id="sensorStateText">OFF</div>
+    <div class="sensor-dot" id="sensorDot"></div>
+
+    <p class="sensor-note">
+      This page mirrors the actuator switch on the Management Dashboard live,
+      using your browser's local storage — open both pages side by side and
+      flip the switch to watch this update instantly. It's a same-browser
+      simulation, not a real signal from the physical GNS3 lab (the lab's
+      VLANs have no route to the public internet, by design).
+    </p>
+
+    <div class="temp-panel" id="tempPanel">
+      <p class="temp-panel-label">Temperature Sensor (Simulated)</p>
+
+      <div class="temp-readout" id="tempReadout">24.0°C</div>
+
+      <input type="range" id="tempSlider" min="15" max="45" step="0.5" value="24" />
+
+      <div class="temp-range-labels">
+        <span>15°C</span>
+        <span>45°C</span>
+      </div>
+    </div>
+
+    <script>
+      /* =====================================================
+         Shared state keys — same keys management.html reads,
+         same-browser-only simulation, not a real GNS3 connection.
+      ===================================================== */
+
+      const ACTUATOR_KEY = "thinkixActuatorState";
+      const TEMP_KEY = "thinkixTemperatureValue";
+      const TEMP_MIN = 15;
+      const TEMP_MAX = 45;
+      const TEMP_DEFAULT = 24.0;
+
+      const body = document.getElementById("sensorBody");
+      const stateText = document.getElementById("sensorStateText");
+      const tempPanel = document.getElementById("tempPanel");
+      const tempSlider = document.getElementById("tempSlider");
+      const tempReadout = document.getElementById("tempReadout");
+
+      function isActuatorOn() {
+        return localStorage.getItem(ACTUATOR_KEY) === "on";
+      }
+
+      function clampTemp(value) {
+        return Math.min(TEMP_MAX, Math.max(TEMP_MIN, value));
+      }
+
+      function readSharedTemp() {
+        const raw = parseFloat(localStorage.getItem(TEMP_KEY));
+        return isNaN(raw) ? TEMP_DEFAULT : raw;
+      }
+
+      let currentTemp = readSharedTemp();
+
+      /* The temperature reading and the ON/OFF indicator represent
+         the same physical device (iot-sensor-vlan10) — when it's
+         off, there is no reading, so the slider disables and the
+         readout shows "DISCONNECTED" instead of a stale number. */
+      function renderTemp(value) {
+        const online = isActuatorOn();
+
+        if (tempSlider) {
+          tempSlider.value = value;
+          tempSlider.disabled = !online;
+        }
+
+        if (tempReadout) {
+          tempReadout.textContent = online
+            ? `${value.toFixed(1)}°C`
+            : "DISCONNECTED";
+        }
+
+        if (tempPanel) {
+          tempPanel.classList.toggle("disconnected", !online);
+        }
+      }
+
+      function applyState(isOn) {
+        body.classList.toggle("on", isOn);
+        stateText.textContent = isOn ? "ON" : "OFF";
+        renderTemp(currentTemp);
+      }
+
+      applyState(isActuatorOn());
+
+      window.addEventListener("storage", (event) => {
+        if (event.key === ACTUATOR_KEY) {
+          applyState(event.newValue === "on");
+        }
+
+        if (event.key === TEMP_KEY) {
+          const value = parseFloat(event.newValue);
+          if (!isNaN(value)) {
+            currentTemp = value;
+            renderTemp(value);
+          }
+        }
+      });
+
+      /* Fallback poll — harmless if the storage event already fired;
+         covers setups where cross-tab storage events don't propagate. */
+      setInterval(() => {
+        applyState(isActuatorOn());
+      }, 1000);
+
+      if (tempSlider) {
+        tempSlider.addEventListener("input", () => {
+          if (tempSlider.disabled) {
+            return;
+          }
+
+          currentTemp = parseFloat(tempSlider.value);
+          localStorage.setItem(TEMP_KEY, currentTemp.toFixed(1));
+          renderTemp(currentTemp);
+        });
+      }
+
+      /* Gentle ambient drift, simulating real sensor noise — only
+         while the sensor is actually "on"; a disconnected sensor
+         doesn't keep producing new readings. */
+      setInterval(() => {
+        if (!isActuatorOn()) {
+          return;
+        }
+
+        currentTemp = clampTemp(currentTemp + (Math.random() - 0.5) * 0.4);
+        localStorage.setItem(TEMP_KEY, currentTemp.toFixed(1));
+        renderTemp(currentTemp);
+      }, 3000);
+    </script>
+  </body>
+</html>

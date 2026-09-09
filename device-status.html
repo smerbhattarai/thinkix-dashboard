@@ -6,68 +6,17 @@
 
     <title>ThinkiX | Device Onboarding Status</title>
 
+    <link rel="stylesheet" href="dashboard.css" />
     <style>
+      :root {
+        --logo-url: url('data:image/png;base64,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');
+        --logo-mark-url: url('data:image/png;base64,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');
+      }
+
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-      }
-
-      body {
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background:
-          radial-gradient(
-            circle at 15% 10%,
-            rgba(14, 165, 233, 0.12),
-            transparent 25%
-          ),
-          radial-gradient(
-            circle at 85% 15%,
-            rgba(37, 99, 235, 0.08),
-            transparent 30%
-          ),
-          #07111f;
-        color: #e8f0f8;
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 18px 5%;
-        background: rgba(7, 17, 31, 0.95);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        backdrop-filter: blur(12px);
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .logo {
-        width: 48px;
-        height: 48px;
-        display: grid;
-        place-items: center;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #38bdf8, #2563eb);
-        font-weight: 800;
-      }
-
-      .brand h2 {
-        font-size: 18px;
-      }
-
-      .brand p {
-        margin-top: 4px;
-        color: #8198ad;
-        font-size: 12px;
       }
 
       .gns3-top-status {
@@ -337,6 +286,57 @@
         font-size: 11px;
       }
 
+      /* SIMULATED SUCCESS STATE */
+
+      .gns3-box.simulated-success {
+        border-color: rgba(34, 197, 94, 0.25);
+        background: rgba(34, 197, 94, 0.05);
+      }
+
+      .gns3-box.simulated-success h3 {
+        color: #4ade80;
+      }
+
+      .gns3-box.simulated-success p {
+        color: #8fae9c;
+      }
+
+      .gns3-check-icon {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: rgba(34, 197, 94, 0.14);
+        color: #4ade80;
+        font-size: 20px;
+        font-weight: 800;
+      }
+
+      .gns3-top-status.simulated-success {
+        border-color: rgba(34, 197, 94, 0.25);
+        background: rgba(34, 197, 94, 0.08);
+        color: #86efac;
+      }
+
+      .gns3-top-status.simulated-success .pending-dot {
+        background: #22c55e;
+        box-shadow: 0 0 12px #22c55e;
+        animation: none;
+      }
+
+      .simulation-disclaimer {
+        margin-top: 14px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        border: 1px dashed rgba(250, 204, 21, 0.3);
+        background: rgba(250, 204, 21, 0.04);
+        color: #b8ad78;
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
       .result-panel {
         margin-top: 22px;
         display: none;
@@ -385,6 +385,19 @@
         margin-top: 7px;
         color: #fde047;
         font-size: 18px;
+      }
+
+      .overall-status.simulated-success {
+        border-color: rgba(34, 197, 94, 0.22);
+        background: rgba(34, 197, 94, 0.06);
+      }
+
+      .overall-status.simulated-success small {
+        color: #7fae8f;
+      }
+
+      .overall-status.simulated-success strong {
+        color: #4ade80;
       }
 
       .buttons {
@@ -465,35 +478,46 @@
     </style>
   </head>
 
-  <body>
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">IX</div>
-
-        <div>
-          <h2>ThinkiX Management</h2>
-          <p>Industrial IoT Device Onboarding</p>
+  <body class="dash2">
+    
+    <div class="dash2-watermark"></div>
+    <div class="dash2-shell">
+      <aside class="dash2-sidebar">
+        <div class="dash2-sidebar-brand">
+          <img src="data:image/png;base64,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" alt="ThinkiX logo" />
+          <div>
+            <h1>ThinkiX</h1>
+            <span>Industrial IoT Security</span>
+          </div>
         </div>
-      </div>
 
-      <div class="gns3-top-status">
-        <span class="pending-dot"></span>
-        GNS3 CONNECTION PENDING
-      </div>
-    </header>
+        <nav class="dash2-sidenav">
+          <div class="dash2-sidenav-group"><span>Overview</span><a href="management.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="2.5" width="6" height="6" rx="1.5"/><rect x="11.5" y="2.5" width="6" height="6" rx="1.5"/><rect x="2.5" y="11.5" width="6" height="6" rx="1.5"/><rect x="11.5" y="11.5" width="6" height="6" rx="1.5"/></svg><span>Dashboard</span></a></div><div class="dash2-sidenav-group"><span>Network & Security</span><a href="zone-map.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="2.3"/><circle cx="3" cy="3" r="1.6"/><circle cx="17" cy="3" r="1.6"/><circle cx="3" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/><line x1="8.3" y1="8.3" x2="4.2" y2="4.2"/><line x1="11.7" y1="8.3" x2="15.8" y2="4.2"/><line x1="8.3" y1="11.7" x2="4.2" y2="15.8"/><line x1="11.7" y1="11.7" x2="15.8" y2="15.8"/></svg><span>Zone Map</span></a><a href="alerts.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M10 3 L18 17 L2 17 Z"/><line x1="10" y1="8" x2="10" y2="11.5"/><circle cx="10" cy="14" r="0.9" fill="currentColor" stroke="none"/></svg><span>Security Alerts</span></a><a href="interfaces.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v4M13 2v4M5 6h10v3a5 5 0 0 1-10 0V6z"/><path d="M10 14v4"/></svg><span>Interfaces</span></a><a href="evidence.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M10 2l7 3v5c0 4.5-3 7.5-7 8-4-.5-7-3.5-7-8V5l7-3z"/><path d="M7 10l2 2 4-4.5"/></svg><span>Evidence</span></a><a href="event-log.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="12" height="15" rx="1.5"/><line x1="7" y1="7.5" x2="13" y2="7.5"/><line x1="7" y1="11" x2="13" y2="11"/><line x1="7" y1="14.5" x2="10.5" y2="14.5"/></svg><span>Event Log</span></a></div><div class="dash2-sidenav-group"><span>Simulation</span><a href="simulation.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="4" y1="17" x2="4" y2="3"/><line x1="10" y1="17" x2="10" y2="3"/><line x1="16" y1="17" x2="16" y2="3"/><circle cx="4" cy="7" r="1.8" fill="currentColor" stroke="none"/><circle cx="10" cy="13" r="1.8" fill="currentColor" stroke="none"/><circle cx="16" cy="9" r="1.8" fill="currentColor" stroke="none"/></svg><span>Live Simulation</span></a></div><div class="dash2-sidenav-group"><span>Device Management</span><a href="register.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="3"/><path d="M2.5 17c.5-3.5 3-5.5 5.5-5.5s5 2 5.5 5.5"/><line x1="15.5" y1="5" x2="15.5" y2="10"/><line x1="13" y1="7.5" x2="18" y2="7.5"/></svg><span>Register Device</span></a><a href="device-status.html" class="active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,10 6,10 8,4 12,16 14,10 18,10"/></svg><span>Device Status</span></a><a href="history.html" class=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="11" r="7"/><polyline points="10,7 10,11 13,13"/><path d="M6 2.5 L3 4.5"/></svg><span>History</span></a></div>
+        </nav>
 
-    <main class="container">
-      <section class="page-heading">
-        <p class="eyebrow">DEVICE ONBOARDING WORKFLOW</p>
+        <div class="dash2-sidebar-foot">
+          <span class="dash2-online-pill"><i></i><span>SYSTEM ONLINE</span></span>
+          <a href="index.html" class="dash2-logout"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4"/><polyline points="12,6 16,10 12,14"/><line x1="16" y1="10" x2="7" y2="10"/></svg><span>Logout</span></a>
+        </div>
+      </aside>
 
-        <h1>Registering Industrial Device</h1>
+      <div class="dash2-content">
 
-        <p>
-          Processing the device information entered by management, preparing the
-          security profile and attempting live network integration.
-        </p>
-      </section>
+        
+        <header class="dash2-topbar">
+          <div>
+            <p class="dash2-eyebrow">Device Onboarding Workflow</p>
+            <h1>Registering Industrial Device</h1>
+            <p>Processing the device information entered by management, preparing the security profile and attempting live network integration.</p>
+          </div>
+          <div class="dash2-topbar-right"><div class="gns3-top-status" id="gns3TopStatus">
+          <span class="pending-dot" id="gns3TopStatusDot"></span>
+          <span id="gns3TopStatusText">GNS3 CONNECTION PENDING</span>
+        </div></div>
+        </header>
 
+
+        <main class="container">
       <section class="main-grid">
         <!-- LEFT SIDE -->
 
@@ -615,12 +639,12 @@
 
             <div class="gns3-box" id="gns3Box">
               <div class="gns3-header">
-                <div class="spinner"></div>
+                <div class="spinner" id="gns3Spinner"></div>
 
                 <div>
-                  <h3>Trying to Connect to GNS3</h3>
+                  <h3 id="gns3BoxTitle">Trying to Connect to GNS3</h3>
 
-                  <p>
+                  <p id="gns3BoxText">
                     Device registration is complete. ThinkiX is waiting for live
                     GNS3 integration before the device can be verified as
                     online.
@@ -630,10 +654,10 @@
             </div>
 
             <div class="result-panel" id="resultPanel">
-              <div class="result-banner">
-                <h2>Registration Processing Complete</h2>
+              <div class="result-banner" id="resultBanner">
+                <h2 id="resultBannerTitle">Registration Processing Complete</h2>
 
-                <p>
+                <p id="resultBannerText">
                   Device information has been accepted and prepared. The device
                   is registered, but it is not marked online until live GNS3
                   verification succeeds.
@@ -668,20 +692,26 @@
 
                 <div class="result-row">
                   <span>GNS3 Verification</span>
-                  <span class="pending-text">PENDING</span>
+                  <span class="pending-text" id="gns3VerificationStatus">PENDING</span>
                 </div>
 
                 <div class="result-row">
                   <span>Live Device Status</span>
-                  <span class="muted">NOT VERIFIED</span>
+                  <span class="muted" id="liveDeviceStatus">NOT VERIFIED</span>
                 </div>
               </div>
 
-              <div class="overall-status">
+              <div class="overall-status" id="overallStatusBox">
                 <small> OVERALL DEVICE STATUS </small>
 
-                <strong> REGISTERED — AWAITING GNS3 CONNECTION </strong>
+                <strong id="overallStatusText"> REGISTERED — AWAITING GNS3 CONNECTION </strong>
               </div>
+
+              <p class="simulation-disclaimer" id="simulationDisclaimer" hidden>
+                Simulated for demo purposes — this page has no live backend
+                connection to the actual GNS3 lab, so this confirmation is not
+                a real network verification.
+              </p>
             </div>
           </section>
         </div>
@@ -780,34 +810,34 @@
           <section class="panel" style="margin-top: 22px">
             <h2>GNS3 Integration Status</h2>
 
-            <p class="panel-sub">
+            <p class="panel-sub" id="gns3IntegrationSub">
               This section becomes live after GNS3 integration is enabled.
             </p>
 
             <div class="result-list">
               <div class="result-row">
                 <span>Connection</span>
-                <span class="pending-text">TRYING TO CONNECT</span>
+                <span class="pending-text" id="gns3RowConnection">TRYING TO CONNECT</span>
               </div>
 
               <div class="result-row">
                 <span>Node Verification</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowNode">WAITING</span>
               </div>
 
               <div class="result-row">
                 <span>Interface State</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowInterface">WAITING</span>
               </div>
 
               <div class="result-row">
                 <span>Traffic Detection</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowTraffic">WAITING</span>
               </div>
 
               <div class="result-row">
                 <span>Live Monitoring</span>
-                <span class="muted">WAITING</span>
+                <span class="muted" id="gns3RowMonitoring">WAITING</span>
               </div>
             </div>
           </section>
@@ -824,6 +854,13 @@
         </div>
       </section>
     </main>
+
+        <footer class="dash2-footer">
+          <p>ThinkiX Manufacturing &bull; Secure Industrial IoT Management Platform &bull; BN304 Evidence Log</p>
+        </footer>
+    
+      </div>
+    </div>
 
     <script>
       "use strict";
@@ -992,10 +1029,90 @@
       function completeRegistration() {
         document.getElementById("resultPanel").classList.add("show");
 
-        updateHistoryRecord();
+        updateHistoryRecord(false);
+
+        /* =====================================
+               SIMULATED GNS3 CONFIRMATION
+
+               NOTE: this page has no real backend
+               connection to the GNS3 lab. After a
+               short delay we flip the UI to a
+               clearly-labeled SIMULATED success
+               state for demo purposes only — this
+               is not a live network verification.
+            ====================================== */
+
+        setTimeout(simulateGns3Success, 3200);
       }
 
-      function updateHistoryRecord() {
+      function simulateGns3Success() {
+        const gns3Step = document.getElementById("step9");
+        const stepStatus = gns3Step.querySelector(".step-status");
+
+        gns3Step.classList.remove("pending");
+        gns3Step.classList.add("done");
+        gns3Step.querySelector(".step-icon").textContent = "✓";
+        stepStatus.textContent = "CONNECTED (SIMULATED)";
+
+        const gns3Box = document.getElementById("gns3Box");
+        gns3Box.classList.add("simulated-success");
+
+        const spinner = document.getElementById("gns3Spinner");
+        spinner.classList.remove("spinner");
+        spinner.classList.add("gns3-check-icon");
+        spinner.textContent = "✓";
+
+        document.getElementById("gns3BoxTitle").textContent =
+          "Connected to GNS3 (Simulated)";
+        document.getElementById("gns3BoxText").textContent =
+          "This is a simulated confirmation for demo purposes — this page has no live backend wired to the actual GNS3 lab, so no real network check occurred.";
+
+        const topStatus = document.getElementById("gns3TopStatus");
+        topStatus.classList.add("simulated-success");
+        document.getElementById("gns3TopStatusText").textContent =
+          "GNS3 CONNECTION ONLINE (SIMULATED)";
+
+        const gns3VerificationStatus = document.getElementById(
+          "gns3VerificationStatus",
+        );
+        gns3VerificationStatus.classList.remove("pending-text");
+        gns3VerificationStatus.classList.add("good");
+        gns3VerificationStatus.textContent = "CONFIRMED (SIMULATED)";
+
+        const liveDeviceStatus = document.getElementById("liveDeviceStatus");
+        liveDeviceStatus.classList.remove("muted");
+        liveDeviceStatus.classList.add("good");
+        liveDeviceStatus.textContent = "ONLINE (SIMULATED)";
+
+        const overallStatusBox = document.getElementById("overallStatusBox");
+        overallStatusBox.classList.add("simulated-success");
+        document.getElementById("overallStatusText").textContent =
+          "REGISTERED — GNS3 VERIFIED (SIMULATED)";
+
+        document.getElementById("simulationDisclaimer").hidden = false;
+
+        document.getElementById("gns3IntegrationSub").textContent =
+          "Simulated confirmation — no live GNS3 integration is actually connected.";
+
+        const integrationRows = [
+          ["gns3RowConnection", "CONNECTED (SIMULATED)"],
+          ["gns3RowNode", "VERIFIED (SIMULATED)"],
+          ["gns3RowInterface", "UP (SIMULATED)"],
+          ["gns3RowTraffic", "DETECTED (SIMULATED)"],
+          ["gns3RowMonitoring", "ACTIVE (SIMULATED)"],
+        ];
+
+        integrationRows.forEach(([id, text]) => {
+          const el = document.getElementById(id);
+          el.classList.remove("pending-text", "muted");
+          el.classList.add("good");
+          el.textContent = text;
+        });
+
+        updateHistoryRecord(true);
+      }
+
+      function updateHistoryRecord(simulated) {
         let history = [];
 
         try {
@@ -1021,11 +1138,13 @@
 
           monitoringStatus: "Prepared",
 
-          gns3Status: "Pending",
+          gns3Status: simulated ? "Confirmed (Simulated)" : "Pending",
 
-          liveStatus: "Not Verified",
+          liveStatus: simulated ? "Online (Simulated)" : "Not Verified",
 
-          overallStatus: "Registered - Awaiting GNS3 Connection",
+          overallStatus: simulated
+            ? "Registered - GNS3 Verified (Simulated)"
+            : "Registered - Awaiting GNS3 Connection",
         };
 
         if (index >= 0) {
