@@ -389,9 +389,9 @@ function createRegisteredDeviceRow(device) {
     deviceRow.dataset.registrationId = device.registrationId;
   }
 
-  /* A device only shows as (simulated) online once device-status.html
-     has run its simulated GNS3 confirmation for it. Until then it stays
-     the original honest "registered but unverified" yellow state. */
+  /* A device only shows as (simulated) online once the registration
+     sequence's simulated GNS3 confirmation has run for it. Until then
+     it stays the original honest "registered but unverified" state. */
 
   const isSimulatedOnline = device.gns3Status === "Confirmed (Simulated)";
 
@@ -495,9 +495,10 @@ function loadRegisteredDevices() {
      Registered devices = history count
 
      ONLINE DEVICES starts at 3 (the real lab devices) and only
-     gains a registered device once device-status.html has run
-     its simulated GNS3 confirmation for it — a plain registration
-     is NOT considered live until that (simulated) confirmation.
+     gains a registered device once the registration sequence has
+     run its simulated GNS3 confirmation for it — a plain
+     registration is NOT considered live until that (simulated)
+     confirmation.
   --------------------------------------------------------- */
 
   const simulatedOnlineCount = history.filter(
@@ -838,14 +839,187 @@ if (form) {
       }
 
       /* =====================================
-             GO TO DEVICE STATUS PAGE
+             FULL-SCREEN REGISTRATION SEQUENCE
+
+             Everything else on the page sits hidden
+             behind this overlay: each validation step,
+             then the GNS3 connection check (same
+             big-screen treatment, not a separate card),
+             then a final "Device Registered" screen
+             before moving on to History.
           ====================================== */
 
       setTimeout(() => {
-        window.location.href = "device-status.html";
-      }, 1400);
+        beginRegistrationSequence(formData);
+      }, 500);
     }, 1200);
   });
+}
+
+/* =========================================================
+   FULL-SCREEN REGISTRATION SEQUENCE (register.html only --
+   these only ever run from the submit handler above, which
+   is itself guarded by `if (form)`, so they are inert on
+   every other page)
+========================================================= */
+
+const REGISTRATION_STEPS = [
+  {
+    title: "Registration Received",
+    desc: "Loading the information submitted by management.",
+  },
+  {
+    title: "Device ID Validation",
+    desc: "Checking the submitted device identifier.",
+  },
+  {
+    title: "IP Address Validation",
+    desc: "Confirming the IPv4 address format.",
+  },
+  {
+    title: "MAC Address Validation",
+    desc: "Checking the registered hardware address.",
+  },
+  {
+    title: "VLAN Assignment",
+    desc: "Preparing the approved industrial network zone.",
+  },
+  {
+    title: "Security Configuration",
+    desc: "Applying the selected device security profile.",
+  },
+  {
+    title: "Monitoring Preparation",
+    desc: "Preparing IDS and traffic-monitoring configuration.",
+  },
+  {
+    title: "Management Record",
+    desc: "Saving the registration into device history.",
+  },
+];
+
+function swapRegLoadingText(el) {
+  el.classList.remove("swap");
+
+  void el.offsetWidth; // force reflow so the fade-in replays
+
+  el.classList.add("swap");
+}
+
+function beginRegistrationSequence(formData) {
+  const overlay = document.getElementById("regLoadingOverlay");
+
+  if (!overlay) {
+    window.location.href = "history.html";
+
+    return;
+  }
+
+  const headingEl = document.getElementById("regLoadingHeading");
+  const countEl = document.getElementById("regLoadingCount");
+  const statusEl = document.getElementById("regLoadingStatus");
+  const fillEl = document.getElementById("regLoadingFill");
+
+  overlay.hidden = false;
+
+  /* Slow, deliberate pacing -- this is meant to read as a real,
+     unhurried process, not a snappy inline spinner. */
+
+  const STEP_TIME = 950;
+
+  let i = 0;
+
+  function showStep() {
+    const step = REGISTRATION_STEPS[i];
+
+    countEl.textContent = `STEP ${i + 1} OF ${REGISTRATION_STEPS.length}`;
+    statusEl.textContent = step.desc;
+
+    swapRegLoadingText(statusEl);
+
+    fillEl.style.width = `${((i + 1) / REGISTRATION_STEPS.length) * 100}%`;
+
+    setTimeout(() => {
+      i++;
+
+      if (i < REGISTRATION_STEPS.length) {
+        showStep();
+      } else {
+        setTimeout(() => runGns3Phase(formData), 600);
+      }
+    }, STEP_TIME);
+  }
+
+  function runGns3Phase(device) {
+    countEl.textContent = "NETWORK VERIFICATION";
+    statusEl.textContent =
+      "Trying to locate and verify the registered device in the lab.";
+
+    swapRegLoadingText(statusEl);
+
+    setTimeout(() => {
+      overlay.classList.add("gns3-ok");
+
+      statusEl.textContent =
+        "Connected to GNS3 (Simulated) — no live backend, demo confirmation only.";
+
+      swapRegLoadingText(statusEl);
+
+      updateHistoryToConfirmed(device);
+
+      setTimeout(showRegisteredScreen, 1500);
+    }, 2800);
+  }
+
+  function showRegisteredScreen() {
+    overlay.classList.add("done-final");
+
+    headingEl.textContent = "Device Registered";
+    countEl.textContent = "COMPLETE";
+    statusEl.textContent = `${
+      formData.deviceName || "The device"
+    } is registered and GNS3-verified (simulated).`;
+
+    swapRegLoadingText(statusEl);
+
+    setTimeout(() => {
+      window.location.href = "history.html";
+    }, 2000);
+  }
+
+  showStep();
+}
+
+function updateHistoryToConfirmed(device) {
+  const history = getDeviceHistory();
+
+  const index = history.findIndex(
+    (item) => item.registrationId === device.registrationId,
+  );
+
+  const updatedRecord = {
+    ...device,
+
+    registrationStatus: "Registered",
+
+    securityProfile: "Ready",
+
+    monitoringStatus: "Prepared",
+
+    gns3Status: "Confirmed (Simulated)",
+
+    liveStatus: "Online (Simulated)",
+
+    overallStatus: "Registered - GNS3 Verified (Simulated)",
+  };
+
+  if (index >= 0) {
+    history[index] = updatedRecord;
+  } else {
+    history.unshift(updatedRecord);
+  }
+
+  saveDeviceHistory(history);
 }
 
 /* =========================================================
