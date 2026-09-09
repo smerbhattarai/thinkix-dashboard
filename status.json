@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-09-09 06:25:07 UTC",
+  "last_updated": "2026-09-09 17:41:27 UTC",
   "monitoring_status": "online",
-  "recent_alerts_5min": 43,
+  "recent_alerts_5min": 48,
   "anomaly_status": "normal",
-  "sensor_status": "online"
+  "sensor_status": "offline"
 }
